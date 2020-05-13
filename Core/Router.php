@@ -1,6 +1,6 @@
 <?php
-
 namespace Core;
+
 
 class Router{
 
@@ -11,11 +11,11 @@ class Router{
 	private $actionData;
 
 
-	public function __construct(){
+	public function __construct($controllerNamespace){
 
 		$this->url = trim($_SERVER['REQUEST_URI'], '/');
 		$this->parseUrl();
-		$this->callControllerMethod();
+		$this->callControllerMethod($controllerNamespace);
 
 	}
 
@@ -44,7 +44,7 @@ class Router{
 	//Check if there is action data in the rest of the url and set them in actionData
 	private function setActionDataFromUrlData(){
 
-		$this->actionData = new stdClass();
+		$this->actionData = new \stdClass();
 
 		$dataNumber = count($this->urlData);
 
@@ -64,14 +64,14 @@ class Router{
 		$this->actionData->post = $_POST;
 	}
 
-	private function callControllerMethod(){
+	private function callControllerMethod($controllerNamespace){
 
 		$path = '../App/Controllers/'.$this->controller.'.php';
 
 		if(file_exists($path)){
 			require_once $path;
-
-			$this->controller = new $this->controller($this->actionData);
+			$controller = $controllerNamespace.$this->controller;
+			$this->controller = new $controller($this->actionData);
 
 			if(method_exists($this->controller, $this->action)){
 

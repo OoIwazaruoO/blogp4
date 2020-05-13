@@ -1,5 +1,7 @@
 <?php
 
+namespace Core;
+
 class View{
 
 	protected $viewsPath;
@@ -7,19 +9,19 @@ class View{
 
 	public function __construct($viewsPath, $template){
 		$this->setViewsPath($viewsPath);
-		$this->setTemplate($template)
+		$this->setTemplate($template);
 	}
 
 
-	public function render($view, $data){
+	public function render($view, $data = []){
 		
 		ob_start();
 		extract($data);
-		require($this->viewPath . str_replace('.', '/', $view) . '.php');
+		require($this->viewsPath . str_replace('.', '/', $view) . 'View.php');
 
 		$content = ob_get_clean();
 
-		require($this->viewPath . 'templates/' . $this->template . '.php');
+		require($this->viewsPath . 'templates/' . $this->template . '.php');
 	}
 
 	public function setViewsPath($viewsPath){
