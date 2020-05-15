@@ -2,5 +2,8 @@ RewriteEngine On
 
 RewriteCond %{REQUEST_FILENAME} !-f
 
+RewriteRule ^App/ - [R=404,L,NC]
+RewriteRule ^Core/ - [R=404,L,NC]
+RewriteRule ^Vendors/ - [R=404,L,NC]
 RewriteCond %{REQUEST_URI} !^/Public/
 RewriteRule ^(.*)$ /Public/$1 [L]
