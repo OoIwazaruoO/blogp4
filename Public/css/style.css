@@ -1,0 +1,25 @@
+body{
+	min-height: 100vh;
+}
+
+header#header,
+footer#footer{
+	height: 6.5rem;
+}
+
+header img{
+	height: 5.5rem;
+}
+
+header .main-navigation a{
+	color: white;
+	font-size: 2rem;
+}
+
+footer#footer{
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	font-size: 2rem;
+	text-align: right;
+}
