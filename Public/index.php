@@ -15,4 +15,10 @@ $managersLoader->register();
 
 
 
-$app = new Router("App\\Controllers\\");
+try{
+	$app = new Router("App\\Controllers\\");
+}
+catch(Exception $e){
+	require "../App/Views/404.php";
+	exit;
+}
