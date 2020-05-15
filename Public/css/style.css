@@ -1,5 +1,6 @@
 body{
 	min-height: 100vh;
+	position: relative;
 }
 
 header#header,
@@ -22,4 +23,22 @@ footer#footer{
 	width: 100%;
 	font-size: 2rem;
 	text-align: right;
+}
+
+#homePresentation{
+	text-align: center;
+	font-size: 1.5rem;
+	padding: 3rem 0;
+	width: 40%;
+	margin: 0 auto;
+	min-width: 320px;
+}
+
+#homePresentation h1{
+	margin-bottom: 2.5rem;
+}
+
+
+#homePresentation figure img{
+	max-height: 12rem;
 }
