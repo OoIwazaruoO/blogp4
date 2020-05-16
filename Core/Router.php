@@ -14,8 +14,10 @@ class Router{
 	public function __construct($controllerNamespace){
 
 		$this->url = trim($_SERVER['REQUEST_URI'], '/');
+		$this->controllerNamespace = $controllerNamespace;
 		$this->parseUrl();
-		$this->callControllerMethod($controllerNamespace);
+		$this->callControllerMethod($this->controllerNamespace);
+		
 
 	}
 

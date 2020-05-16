@@ -18,9 +18,7 @@ header .main-navigation a{
 }
 
 footer#footer{
-	position: absolute;
-	bottom: 0;
-	width: 100%;
+	margin-top: 2.5rem;
 	font-size: 2rem;
 	text-align: right;
 }
@@ -41,4 +39,14 @@ footer#footer{
 
 #homePresentation figure img{
 	max-height: 12rem;
+}
+
+#blog {
+	width: 60%;
+	margin: 0 auto;
+	min-width: 320px;
+}
+
+#blog h1{
+	text-align: center;
 }
