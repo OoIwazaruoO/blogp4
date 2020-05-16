@@ -20,7 +20,9 @@ abstract class Manager{
 
 		$req->setFetchMode(\PDO::FETCH_CLASS|\PDO::FETCH_PROPS_LATE, $this->classname);
 
-		return $req->execute(array($id));
+		$req->execute(array($id));
+
+		return $req;
 	}
 
 	public function findAll(){

@@ -23,13 +23,25 @@ footer#footer{
 	text-align: right;
 }
 
-#homePresentation{
+main{
+	min-height: calc(100vh - 15.5rem)
+}
+
+#homePresentation,
+#article #read{
 	text-align: center;
 	font-size: 1.5rem;
-	padding: 3rem 0;
-	width: 40%;
 	margin: 0 auto;
 	min-width: 320px;
+	padding: 3rem 0;
+}
+
+#homePresentation{
+	width: 40%;
+}
+
+#article #read{
+	width: 80%;
 }
 
 #homePresentation h1{
@@ -50,3 +62,4 @@ footer#footer{
 #blog h1{
 	text-align: center;
 }
+
