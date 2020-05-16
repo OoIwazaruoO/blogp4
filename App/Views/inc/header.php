@@ -11,7 +11,7 @@
 						<a class="nav-link" href="/articles">Blog</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="/users  ?>">Mon espace</a>
+						<a class="nav-link" href="/users">Mon espace</a>
 					</li>
 				</ul>
 					
