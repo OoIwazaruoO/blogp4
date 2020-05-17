@@ -13,13 +13,15 @@ class View{
 	}
 
 
-	public function render($view, $data = []){
+	public function render($view, $data = [], $script = []){
 		
 		ob_start();
 		extract($data);
 		require($this->viewsPath . str_replace('.', '/', $view) . 'View.php');
 
 		$content = ob_get_clean();
+		$script = $script;
+
 
 		require($this->viewsPath . 'templates/' . $this->template . '.php');
 	}
