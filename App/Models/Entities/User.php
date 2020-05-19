@@ -59,7 +59,7 @@ class User extends Entity
 
     public function setPassword($password)
     {
-        if (strlen($pass) >= 8) {
+        if (strlen($password) >= 8) {
             $this->password = $password;
         } else {
             $this->errors[] = self::INVALID_PASS;
