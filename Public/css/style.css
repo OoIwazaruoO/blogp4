@@ -27,8 +27,7 @@ main{
 	min-height: calc(100vh - 15.5rem)
 }
 
-#homePresentation,
-#article #read{
+main > *{
 	text-align: center;
 	font-size: 1.5rem;
 	margin: 0 auto;
@@ -40,26 +39,31 @@ main{
 	width: 40%;
 }
 
-#article #read{
+#article #read,
+{
 	width: 80%;
 }
 
-#homePresentation h1{
-	margin-bottom: 2.5rem;
+#homePresentation h1,#homePresentation h2,
+#blog h1,#blog h2,
+#inscription h1,#inscription h2{
+
+	margin: 2.5rem 0;
+	text-align: center;
 }
+
 
 
 #homePresentation figure img{
 	max-height: 12rem;
 }
 
-#blog {
+#blog,
+#inscription,
+#connection {
 	width: 60%;
 	margin: 0 auto;
 	min-width: 320px;
 }
 
-#blog h1{
-	text-align: center;
-}
 
