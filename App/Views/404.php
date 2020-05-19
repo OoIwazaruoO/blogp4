@@ -14,7 +14,7 @@
 <body>
  <main>
   <section id="homePresentation">
-    <h1>Voyage en Alaska</h1>
+    <h1>Billet simple pour l'Alaska</h1>
 
     <figure class="figure">
       <img src="/Public/images/avalanche.png" class="figure-img img-fluid rounded" alt="Picture of Jean Forteroche ?" >

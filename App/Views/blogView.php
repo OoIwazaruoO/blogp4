@@ -1,6 +1,7 @@
 <section  id="blog">
 
-	<h1>Voyage en Alaska - liste des posts</h1>
+	<h1>Billet simple pour l'Alaska</h1>
+	<h2>Blog</h2>
 
 	<div class="d-flex flex-wrap justify-content-center">
 		<?php

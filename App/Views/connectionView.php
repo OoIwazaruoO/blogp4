@@ -1,4 +1,7 @@
 <section id="connection">
+
+	<h1>Billet simple pour l'Alaska</h1>
+	<h2>Connection</h2>
 	
 	<form action="users/connect" method="post" class="text-left">
 		

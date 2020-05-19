@@ -1,5 +1,5 @@
 <section id="homePresentation">
-	<h1>Voyage en Alaska</h1>
+	<h1>Billet simple pour l'Alaska</h1>
 
 	<figure class="figure">
 		<img src="/Public/images/unknow-face.png" class="figure-img img-fluid rounded" alt="Photo de Jean Forteroche ?" >
