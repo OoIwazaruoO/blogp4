@@ -2,37 +2,37 @@
 
 namespace Core;
 
-abstract class Manager{
+abstract class Manager {
 
 	protected $dao;
 	protected $targetTable;
 	protected $className;
 
-	public function __construct($dao, $table, $className){
-		$this->dao = $dao; 
+	public function __construct($dao, $table, $className) {
+		$this->dao = $dao;
 		$this->targetTable = $table;
 		$this->className = $className;
 	}
 
-	public function find($id){
-		
+	public function find($id) {
+
 		$req = $this->dao->prepare("SELECT * from {$this->targetTable} WHERE id = ?");
 
-		$req->setFetchMode(\PDO::FETCH_CLASS|\PDO::FETCH_PROPS_LATE, $this->className);
+		$req->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $this->className);
 
 		$req->execute(array($id));
 
 		return $req;
 	}
 
-	public function findAll(){
+	public function findAll() {
 		$result = $this->dao->query("SELECT * from {$this->targetTable}");
-		
-		$result->setFetchMode(\PDO::FETCH_CLASS|\PDO::FETCH_PROPS_LATE, $this->className);
+
+		$result->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $this->className);
 		return $result;
 	}
 
-	public function delete($id){
-		$this->dao->query("DELETE from {$this->targetTable} WHERE id = ?");	 
+	public function delete($id) {
+		$this->dao->query("DELETE from {$this->targetTable} WHERE id = ?");
 	}
 }

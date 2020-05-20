@@ -21,8 +21,7 @@ class UsersController extends MyController {
 		if (empty($_SESSION['auth'])):
 			$this->connectionFormAction();
 		else:
-			header("Location: /");
-			exit;
+			$this->leadUser();
 		endif;
 	}
 
@@ -140,6 +139,19 @@ class UsersController extends MyController {
 			exit;
 		endif;
 
+	}
+
+	private function leadUser() {
+		$this->userProfil();
+	}
+
+	private function userProfil() {
+
+		$user = $this->usersManager->find($_SESSION['auth']['id'])->fetch();
+
+		var_dump($user);
+
+		$this->view->render("profil", compact('user'));
 	}
 
 }
