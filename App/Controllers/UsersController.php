@@ -142,14 +142,18 @@ class UsersController extends MyController {
 	}
 
 	private function leadUser() {
-		$this->userProfil();
+
+		if ($this->user->isAuthentifiedAdmin()):
+			header("Location: /master");
+		else:
+			$this->userProfil();
+		endif;
+
 	}
 
 	private function userProfil() {
 
 		$user = $this->usersManager->find($_SESSION['auth']['id'])->fetch();
-
-		var_dump($user);
 
 		$this->view->render("profil", compact('user'));
 	}
