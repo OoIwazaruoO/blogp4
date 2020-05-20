@@ -67,6 +67,51 @@ class UsersController extends MyController {
 
 	}
 
+	public function confirmAction() {
+
+		$_SESSION['flash']['error'] = [];
+		$_SESSION['flash']['success'] = [];
+
+		if (!empty($this->Data->get['login']) && !empty($this->Data->get['token'])):
+
+			$login = $this->Data->get['login'];
+			$token = $this->Data->get['token'];
+
+			if ($user = $this->usersManager->findByLogin($login)->fetch()):
+
+				if (!$user->confirmed()):
+
+					$time1 = time();
+					$time2 = strtotime($user->confirmationDate());
+
+					if ($time1 > $time2):
+						$_SESSION['flash']['error'][] = "Le lien est expiré";
+					else:
+						if ($token == $user->confirmationToken()):
+							$this->usersManager->confirm($login);
+							$_SESSION['flash']['success'][] = "Compte confirmé, vous pouvez vous connecter";
+						else:
+							$_SESSION['flash']['error'][] = "Le lien que vous avez suivi est erronné";
+						endif;
+
+					endif;
+
+				else:
+					$_SESSION['flash']['success'][] = "Votre compte est déjà confirmé";
+				endif;
+
+			else:
+				$_SESSION['flash']['error'][] = "Le lien que vous avez suivi est erronné";
+			endif;
+
+		else:
+			$_SESSION['flash']['error'][] = "Le lien que vous avez suivi est erronné";
+		endif;
+
+		header("Location: /users");
+
+	}
+
 	public function connectionFormAction() {
 		$this->view->render('connection');
 	}

@@ -41,6 +41,14 @@ class UsersManager extends Manager {
 
 	}
 
+	public function confirm($login) {
+
+		$req = $this->dao->prepare("UPDATE {$this->targetTable} SET confirmed = 1 WHERE login = :login");
+
+		$req->execute(array(':login' => $login));
+
+	}
+
 	public function add($login, $password, $mail) {
 
 		if (!$this->userExist($login, $mail)) {
@@ -48,6 +56,7 @@ class UsersManager extends Manager {
 			$stringToToken = $date . $login;
 
 			$confirmationToken = password_hash($stringToToken, PASSWORD_DEFAULT);
+			$confirmationToken = str_replace('/', '', $confirmationToken);
 			$confirmationDate = date("Y-m-d H:i:s", $date + (60 * 60 * 24 * 2));
 			$hashedPass = password_hash($password, PASSWORD_BCRYPT);
 
@@ -71,29 +80,24 @@ class UsersManager extends Manager {
 
 	public function sendVerificationMail($login, $mail, $confirmationToken) {
 
-		public function sendVerificationMail($login, $mail, $confirmationToken) {
-
 		$login = $login;
 		$mail = $mail;
 		$confirmationToken = $confirmationToken;
-		
-        $our_email = "noreply@jeanforteroche.com";
-        $to = $mail;
-        $from = $our_email;
-        $subject = "Confirmez votre inscription - Billet simple pour l'Alaska";
-        $message = 
-        "<html>
+
+		$our_email = "noreply@jeanforteroche.com";
+		$to = $mail;
+		$from = $our_email;
+		$subject = "Confirmez votre inscription - Billet simple pour l'Alaska";
+		$message =
+			"<html>
         <body>
         <p>Cliquez ici pour confirmer votre inscription <a href=\"localhost/users/confirm/login/{$login}/token/{$confirmationToken}\">Confirmer l'inscription!!!</a></p>
         </body>
         </html>";
-        
-        $headers  = "From: $from\r\n";
-        $headers .= "Content-type: text/html\r\n";
-        $mail = mail($to, $subject, $message, $headers);
 
-
-	}
+		$headers = "From: $from\r\n";
+		$headers .= "Content-type: text/html\r\n";
+		$mail = mail($to, $subject, $message, $headers);
 
 	}
 
