@@ -33,31 +33,54 @@ class MasterController extends MyController {
 
 	public function getListAction() {
 
-		if (!empty($this->Data->post) && !empty($this->Data->post['target'])) {
+		if ($this->user->isAuthentifiedAdmin()):
 
-			$target = $this->Data->post['target'];
+			if (!empty($this->Data->get) && !empty($this->Data->get['target'])):
 
-			$method = 'get' . ucfirst($target) . 'List';
+				$target = $this->Data->get['target'];
 
-			if (method_exists($this, $method)):
-				$this->$method();
-			else:
-				echo null;
-				exit;
+				$method = 'get' . ucfirst($target) . 'List';
+
+				if (method_exists($this, $method)):
+					$this->$method();
+				else:
+					echo null;
+					exit;
+				endif;
+
 			endif;
+		else:
+			header("Location: /");
+			exit;
+		endif;
+
+	}
+
+	private function getArticlesList() {
+
+		if (!empty($this->Data->get['orderby'])):
+			$articles = $this->articlesManager->findAllOrderBy($this->Data->get['orderby'])->fetchAll();
+
+		else:
+			$articles = $this->articlesManager->findAll()->fetchAll();
+		endif;
+
+		$responseArray = array();
+
+		foreach ($articles as $article) {
+			$postArray = ["title" => $article->title(), "excerpt" => $article->contentExcerpt(60), "chapterId" => $article->chapterNumber(), 'update' => $article->updateDate(), 'type' => $article->type()];
+			$responseArray[] = (object) $postArray;
 		}
 
-	}
-
-	public function getArticlesList() {
+		echo json_encode($responseArray);
 
 	}
 
-	public function getCommentsList() {
+	private function getCommentsList() {
 
 	}
 
-	public function getUsersList() {
+	private function getUsersList() {
 
 	}
 
@@ -72,13 +95,14 @@ class MasterController extends MyController {
 				$content = $this->Data->post['content'];
 				$type = $this->Data->post['type'];
 
-				$this->articlesManager->add($title, $chapternumber, $content, $type);
+				echo $this->articlesManager->add($title, $chapternumber, $content, $type);
+
 			else:
-				echo false;
+				echo "Des champs obligatoires ne sont pas remplis";
 			endif;
 
 		else:
-			echo false;
+			echo "une erreur est survenu";
 		endif;
 
 	}

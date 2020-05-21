@@ -30,6 +30,10 @@
 		</div>
 	</form>
 
+	<div id="flashformsuccess" class="mt-5">
+
+	</div>
+
 	<form class="mt-5 border text-left p-5 d-none" enctype="multipart/form-data" method="post" id="articleform">
 		<div class="form-group">
 			<label for="title">Titre du chapite</label>
@@ -50,10 +54,13 @@
 			<label for="content">Contenu du chapitre</label>
 			<textarea class="form-control" id="content" name ="content"  rows="25" required></textarea>
 		</div>
+		<div id="flashformerror" class="mt-5"></div>
 		<div class="form-group text-center">
 			<button type="submit" class="btn btn-primary" id="savepost">Sauvegarder le chapitre</button>
 		</div>
 	</form>
+
+
 
 	<table class="table mt-5 d-none" id="chaptertable">
 		<thead class="thead-dark">
@@ -67,33 +74,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr>
-				<th scope="row">1</th>
-				<td>Mark</td>
-				<td>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odio, illo saepe libero inventore quidem expedita, modi ipsa in. Quis, libero unde facilis, adipisci quisquam omnis fugit. Cum quos repudiandae culpa? </td>
-				<td>Otto</td>
-				<td>Mark</td>
-				<td class="d-flex flex-column"><a href="" class="text-success">modifier</a><a href="" class="text-danger">supprimer</a></td>
 
-			</tr>
-			<tr>
-				<th scope="row">2</th>
-				<td>Jacob</td>
-				<td>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odio, illo saepe libero inventore quidem expedita, modi ipsa in. Quis, libero unde facilis, adipisci quisquam omnis fugit. Cum quos repudiandae culpa? </td>
-				<td>Thornton</td>
-				<td>Mark</td>
-				<td class="d-flex flex-column"><a href="" class="text-success">modifier</a><a href="" class="text-danger">supprimer</a></td>
-
-			</tr>
-			<tr>
-				<th scope="row">3</th>
-				<td>Larry</td>
-				<td>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odio, illo saepe libero inventore quidem expedita, modi ipsa in. Quis, libero unde facilis, adipisci quisquam omnis fugit. Cum quos repudiandae culpa? </td>
-				<td>the Bird</td>
-				<td>Mark</td>
-				<td class="d-flex flex-column"><a href="" class="text-success">modifier</a><a href="" class="text-danger">supprimer</a></td>
-
-			</tr>
 		</tbody>
 	</table>
 

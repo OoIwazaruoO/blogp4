@@ -21,7 +21,29 @@ class ArticlesManager extends Manager {
 		endif;
 
 		$req = $this->dao->prepare($sql);
-		$req->execute($execData);
+		$added = $req->execute($execData);
+
+		return $added;
+
+	}
+
+	public function findAllOrderBy($orderby = "id") {
+
+		$possibleOrderBy = array("id", "creationDate", "updateDate", "type", "chapterNumber");
+
+		$index = array_search($orderby, $possibleOrderBy);
+
+		if (!$index):
+			$orderby = "id";
+		endif;
+
+		$result = $this->dao->prepare("SELECT * from {$this->targetTable} ORDER BY :order");
+
+		$result->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $this->className);
+
+		$result->execute(array(":order" => $orderby));
+
+		return $result;
 
 	}
 
