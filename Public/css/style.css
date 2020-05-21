@@ -78,4 +78,11 @@ main > *{
 	min-width: 320px;
 }
 
+#administration{
+	width: 70%;
+	min-width: 30%;
+}
 
+#administration strong{
+	font-size: 2rem;
+}
