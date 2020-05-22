@@ -68,7 +68,7 @@ class MasterController extends MyController {
 		$responseArray = array();
 
 		foreach ($articles as $article) {
-			$postArray = ["title" => $article->title(), "excerpt" => $article->contentExcerpt(60), "chapterId" => $article->chapterNumber(), 'update' => $article->updateDate(), 'type' => $article->type()];
+			$postArray = ["entity" => "article", "title" => $article->title(), "excerpt" => $article->contentExcerpt(60), "chapterId" => $article->chapterNumber(), 'update' => $article->updateDate(), 'type' => $article->type()];
 			$responseArray[] = (object) $postArray;
 		}
 

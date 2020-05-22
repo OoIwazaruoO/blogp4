@@ -37,11 +37,9 @@ class ArticlesManager extends Manager {
 			$orderby = "id";
 		endif;
 
-		$result = $this->dao->prepare("SELECT * from {$this->targetTable} ORDER BY :order");
+		$result = $this->dao->query("SELECT * from {$this->targetTable} ORDER BY {$orderby}");
 
 		$result->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $this->className);
-
-		$result->execute(array(":order" => $orderby));
 
 		return $result;
 

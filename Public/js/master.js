@@ -1,3 +1,18 @@
+let articlesListLoaded = false;
+
+
+let addPost = () => {
+	let url = "/master/addArticle"
+	let data = $("#articleform").serialize();
+
+	$.ajax({
+		type: "POST",
+		url: url,
+		data: data,
+		success: addPostSuccess
+	});
+}
+
 let addPostSuccess = (data) => {
 
 	if (data == 1) {
@@ -5,6 +20,7 @@ let addPostSuccess = (data) => {
 		$("#articleform").addClass("d-none");
 		setTimeout((e) => {
 			$("#flashformsuccess").html("");
+			loadlist();
 		}, 2500);
 	}
 	else {
@@ -16,52 +32,8 @@ let addPostSuccess = (data) => {
 
 }
 
-let loadListSuccess = (data) => {
-	 
-	 let dataArray = JSON.parse(data);
-
-	 let htmlStr = "";
-
-	 dataArray.forEach((el) => {
-
-	 	let title = el.title;
-	 	let excerpt = el.excerpt;
-	 	let chapterId = el.chapterId;
-	 	let updateDate = el.update;
-	 	let type = el.type === "published" ? "publié" : "brouillon";
-
-
-	 	htmlStr += "<tr> <th scope=\"row\">" + chapterId + "</th> <td>"  + title + "</td> <td>" + excerpt + "</td> <td>" + updateDate + "</td> <td>" + type + "</td> <td class=\"d-flex flex-column\"><a href=\"\" class=\"text-success\">modifier</a><a href=\"\" class=\"text-danger\">supprimer</a></td> </tr>";
-	 })
-
-	 $("#chaptertable tbody").html(htmlStr);
-
+let loadlist = () => {
 	
-}
-
-$("#savepost").click(e => {
-	e.preventDefault();
-
-	let url = "/master/addArticle"
-	let data = $("#articleform").serialize();
-
-	$.ajax({
-		type: "POST",
-		url: url,
-		data: data,
-		success: addPostSuccess
-	});
-})
-
-$("#newchapter").click(e => {
-	$("#articleform").removeClass("d-none");
-	$("#chaptertable").addClass("d-none");
-})
-
-$("#loadlist").click(e => {
-
-	e.preventDefault();
-
 	let target = $("#target").val();
 	let orderBy = $("#orderBy").val();
 
@@ -84,13 +56,77 @@ $("#loadlist").click(e => {
 
 	}
 
-
 	$("#articleform").addClass("d-none");
 	$("#chaptertable").removeClass("d-none");
+}
+
+let loadListSuccess = (data) => {
+
+	let dataArray = JSON.parse(data);
+
+
+	if(dataArray[0]){
+
+			switch(dataArray[0].entity){
+
+					case "article":
+						displayArticlesList(dataArray);
+					break;
+
+					default:
+							console.log("nothing here");
+							break;
+
+			}
+
+
+	}
+
+
+
+	
+}		
+
+
+$("#savepost").click(e => {
+	e.preventDefault();
+	addPost();
+})
+
+$("#newchapter").click(e => {
+	$("#articleform").removeClass("d-none");
+	$("#chaptertable").addClass("d-none");
+})
+
+$("#loadlist").click(e => {
+
+	e.preventDefault();
+
+	loadlist();
+
+	
 
 })
 
 
+let displayArticlesList = (dataArray) => {
+
+	let htmlStr = "";
+
+	dataArray.forEach((el) => {
+
+		let title = el.title;
+		let excerpt = el.excerpt;
+		let chapterId = el.chapterId;
+		let updateDate = el.update;
+		let type = el.type === "published" ? "publié" : "brouillon";
 
 
-				
+		htmlStr += "<tr> <th scope=\"row\">" + chapterId + "</th> <td>"  + title + "</td> <td>" + excerpt + "</td> <td>" + updateDate + "</td> <td>" + type + "</td> <td class=\"d-flex flex-column\"><a href=\"\" class=\"text-success\">modifier</a><a href=\"\" class=\"text-danger\">supprimer</a></td> </tr>";
+	})
+
+	$("#chaptertable tbody").html(htmlStr);
+
+
+
+}
