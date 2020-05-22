@@ -78,6 +78,6 @@
 		</tbody>
 	</table>
 
-
-
 </section>
+
+<script src="https://cdn.tiny.cloud/1/oyi0kjmp7ig7lelr9smxlxck3fjyydguvpiozx3t30jfq88o/tinymce/5/tinymce.min.js"></script>

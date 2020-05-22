@@ -127,6 +127,17 @@ let displayArticlesList = (dataArray) => {
 
 	$("#chaptertable tbody").html(htmlStr);
 
-
-
 }
+
+tinymce.init({
+			selector: "textarea",
+			language: 'fr_FR',
+			language_url: '/Public/js/fr_FR.js',
+			width: "100%",
+			height: "550",
+			setup: function (editor) {
+				editor.on('change', function () {
+					editor.save();
+				});
+			}
+});
