@@ -3,17 +3,24 @@ let articlesListLoaded = false;
 
 let addPost = () => {
 	let url = "/master/addArticle"
-	let data = $("#articleform").serialize();
+
+	var fd = new FormData(document.querySelector("#articleform"));
+    var files = $('#pictureUpload')[0].files[0];
+    fd.append('picture',files);
 
 	$.ajax({
 		type: "POST",
 		url: url,
-		data: data,
+		data: fd,
+		contentType: false,
+        processData: false,
 		success: addPostSuccess
 	});
 }
 
 let addPostSuccess = (data) => {
+
+	console.log(data);
 
 	if (data == 1) {
 		$("#flashformsuccess").html("<div class=\"alert alert-success\" role=\"alert\">Le chapitre a bien était ajouté!</div>");
@@ -27,7 +34,7 @@ let addPostSuccess = (data) => {
 		$("#flashformerror").html("<div class=\"alert alert-danger\" role=\"alert\">" + data + "</div>");
 		setTimeout((e) => {
 			$("#flashformerror").html("");
-		}, 2500);
+		}, 3000);
 	}
 
 }
@@ -67,24 +74,18 @@ let loadListSuccess = (data) => {
 
 	if(dataArray[0]){
 
-			switch(dataArray[0].entity){
+		switch(dataArray[0].entity){
 
-					case "article":
-						displayArticlesList(dataArray);
-					break;
+			case "article":
+			displayArticlesList(dataArray);
+			break;
 
-					default:
-							console.log("nothing here");
-							break;
+			default:
+			console.log("nothing here");
+			break;
 
-			}
-
-
+		}
 	}
-
-
-
-	
 }		
 
 
@@ -101,10 +102,7 @@ $("#newchapter").click(e => {
 $("#loadlist").click(e => {
 
 	e.preventDefault();
-
 	loadlist();
-
-	
 
 })
 
@@ -130,14 +128,30 @@ let displayArticlesList = (dataArray) => {
 }
 
 tinymce.init({
-			selector: "textarea",
-			language: 'fr_FR',
-			language_url: '/Public/js/fr_FR.js',
-			width: "100%",
-			height: "550",
-			setup: function (editor) {
-				editor.on('change', function () {
-					editor.save();
-				});
-			}
+	selector: "textarea",
+	language: 'fr_FR',
+	language_url: '/Public/js/fr_FR.js',
+	width: "100%",
+	height: "550",
+	setup: function (editor) {
+		editor.on('change', function () {
+			editor.save();
+		});
+	}
 });
+let previewPicture = function(fileInput) {
+
+	document.querySelector("#" + fileInput).addEventListener('change', function(e){
+		let file = e.target.files[0],
+		r = new FileReader();
+
+		if (!file) return alert("Echec du chargement du fichier");
+		r.onload = function(e) {
+			document.querySelector('#picturePreview').setAttribute('src', e.target.result);
+
+		}
+		r.readAsDataURL(file);
+	});
+};
+
+previewPicture("pictureUpload");
