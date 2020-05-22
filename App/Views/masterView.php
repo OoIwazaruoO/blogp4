@@ -34,7 +34,7 @@
 
 	</div>
 
-	<form class="mt-5 border text-left p-5 d-none" enctype="multipart/form-data" method="post" id="articleform">
+	<form class="mt-5 border text-left p-5 d-none" enctype="multipart/form-data" method="post" action="/master/addArticle" id="articleform">
 		<div class="form-group">
 			<label for="title">Titre du chapite</label>
 			<input type="text" class="form-control" id="title" placeholder="Titre du chapitre" name="title" required>
@@ -53,6 +53,13 @@
 		<div class="form-group">
 			<label for="content">Contenu du chapitre</label>
 			<textarea class="form-control" id="content" name ="content"  rows="25" required></textarea>
+		</div>
+
+		<div class="form-group d-flex flex-column align-items-center">
+			<p>Image <em>2mo max</em>: <input id="pictureUpload" type="file" name="picture" accept="image/gif,image/png, image/jpeg, image/jpg"></p>
+			<img src="/Public/images/wolf.jpg"  id="picturePreview" class="w-50">
+			<input type="hidden" name="token" value="<?=!empty($token) ?? null?>">
+			<input type="hidden" name="MAX_FILE_SIZE" value="2097152">
 		</div>
 		<div id="flashformerror" class="mt-5"></div>
 		<div class="form-group text-center">
