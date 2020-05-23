@@ -10,7 +10,7 @@ class CommentsManager extends Manager {
 		parent::__construct($dao, $table, $classname);
 	}
 
-	public function add($articleId, $author, $content, $creationDate, $status) {
+	public function add($articleId, $author, $content) {
 		$request = $this->dao->prepare("INSERT INTO {$this->targetTable} SET articleId = :articleId, author = :author, content = :content, creationDate = NOW(), status = 'OK'");
 
 		$added = $request->execute(array(":articleId" => $articleId,
@@ -36,9 +36,9 @@ class CommentsManager extends Manager {
 
 		$id = (int) $articleId;
 
-		$request = $this->dao->prepare("SELECT * FROM {$this->targetTable} WHERE postId = :postId ORDER BY creationDate DESC");
+		$request = $this->dao->prepare("SELECT * FROM {$this->targetTable} WHERE articleId = :articleId ORDER BY creationDate DESC");
 
-		$request->bindValue(':postId', $postId, \PDO::PARAM_INT);
+		$request->bindValue(':articleId', $articleId, \PDO::PARAM_INT);
 		$request->execute();
 
 		$request->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $this->className);

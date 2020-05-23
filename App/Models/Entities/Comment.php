@@ -52,8 +52,12 @@ class Comment extends Entity {
 		$this->creationDate = $date;
 	}
 
+	public function getFormatedDate() {
+		return date('\L\e d-m-Y à H\hi\m\i\ns\s', strtotime($this->creationDate));
+	}
+
 	public function articleId() {return $this->articleId;}
-	public function pseudo() {return $this->pseudo;}
+	public function author() {return $this->author;}
 	public function content() {return $this->content;}
 	public function creationDate() {return $this->creationDate;}
 	public function reported() {return $this->reported;}

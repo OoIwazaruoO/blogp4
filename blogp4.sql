@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le :  mer. 20 mai 2020 à 12:34
+-- Généré le :  sam. 23 mai 2020 à 16:59
 -- Version du serveur :  5.7.24
 -- Version de PHP :  7.2.14
 
@@ -25,6 +25,25 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `comments`
+--
+
+DROP TABLE IF EXISTS `comments`;
+CREATE TABLE IF NOT EXISTS `comments` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `author` varchar(40) NOT NULL,
+  `content` varchar(255) NOT NULL,
+  `creationDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `reported` tinyint(1) NOT NULL DEFAULT '0',
+  `status` enum('OK','EDITED','DELETED') NOT NULL DEFAULT 'OK',
+  `articleId` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `articleexist` (`articleId`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `posts`
 --
 
@@ -37,24 +56,10 @@ CREATE TABLE IF NOT EXISTS `posts` (
   `updateDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `type` enum('published','draft') NOT NULL DEFAULT 'draft',
   `viewsNumber` int(11) NOT NULL DEFAULT '0',
-  `pictureName` varchar(60) NOT NULL,
+  `pictureName` varchar(60) NOT NULL DEFAULT 'wolf.jpg',
   `chapterNumber` int(5) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
-
---
--- Déchargement des données de la table `posts`
---
-
-INSERT INTO `posts` (`id`, `title`, `content`, `creationDate`, `updateDate`, `type`, `viewsNumber`, `pictureName`, `chapterNumber`) VALUES
-(1, 'new post', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab voluptatem adipisci ullam, sit quibusdam voluptatum delectus veritatis autem nihil. Totam libero ut accusamus soluta in accusantium iusto cum harum voluptatibus! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veritatis quas sequi accusantium voluptatibus alias id, unde numquam voluptatem deleniti ipsa placeat, nam, molestias. Non, quisquam, nulla. Quidem accusantium quod eos. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Incidunt accusantium soluta sed perferendis neque fuga eum enim nostrum odit, placeat labore, pariatur, aperiam. Hic autem explicabo tenetur, ratione sed libero!\r\nddezddzad azd azd zad azd azd ddezddzad azd azd zad azd azd ddezddzad azd azd zad azd azd ddezddzad azd azd zad azd azd  ddezddzad azd azd zad azd azd ddezddzad azd azd zad azd azd ddezddzad azd azd zad azd azd ddezddzad azd azd zad azd azd ddezddzad azd azd zad azd azd ddezddzad azd azd zad azd azd', '2020-05-15 18:42:05', '2020-05-15 18:42:05', 'draft', 0, 'wolf.jpg', 1),
-(2, 'new post', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab voluptatem adipisci ullam, sit quibusdam voluptatum delectus veritatis autem nihil. Totam libero ut accusamus soluta in accusantium iusto cum harum voluptatibus! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veritatis quas sequi accusantium voluptatibus alias id, unde numquam voluptatem deleniti ipsa placeat, nam, molestias. Non, quisquam, nulla. Quidem accusantium quod eos. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Incidunt accusantium soluta sed perferendis neque fuga eum enim nostrum odit, placeat labore, pariatur, aperiam. Hic autem explicabo tenetur, ratione sed libero!\r\nddezddzad azd azd zad azd azd ddezddzad azd azd zad azd azd ddezddzad azd azd zad azd azd ddezddzad azd azd zad azd azd  ddezddzad azd azd zad azd azd ddezddzad azd azd zad azd azd ddezddzad azd azd zad azd azd ddezddzad azd azd zad azd azd ddezddzad azd azd zad azd azd ddezddzad azd azd zad azd azd', '2020-05-15 18:42:05', '2020-05-15 18:42:05', 'draft', 0, 'wolf.jpg', 1),
-(3, 'new post', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab voluptatem adipisci ullam, sit quibusdam voluptatum delectus veritatis autem nihil. Totam libero ut accusamus soluta in accusantium iusto cum harum voluptatibus! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veritatis quas sequi accusantium voluptatibus alias id, unde numquam voluptatem deleniti ipsa placeat, nam, molestias. Non, quisquam, nulla. Quidem accusantium quod eos. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Incidunt accusantium soluta sed perferendis neque fuga eum enim nostrum odit, placeat labore, pariatur, aperiam. Hic autem explicabo tenetur, ratione sed libero!\r\nddezddzad azd azd zad azd azd ddezddzad azd azd zad azd azd ddezddzad azd azd zad azd azd ddezddzad azd azd zad azd azd  ddezddzad azd azd zad azd azd ddezddzad azd azd zad azd azd ddezddzad azd azd zad azd azd ddezddzad azd azd zad azd azd ddezddzad azd azd zad azd azd ddezddzad azd azd zad azd azd', '2020-05-15 18:42:15', '2020-05-15 18:42:15', 'draft', 0, 'wolf.jpg', 1),
-(4, 'new post', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab voluptatem adipisci ullam, sit quibusdam voluptatum delectus veritatis autem nihil. Totam libero ut accusamus soluta in accusantium iusto cum harum voluptatibus! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veritatis quas sequi accusantium voluptatibus alias id, unde numquam voluptatem deleniti ipsa placeat, nam, molestias. Non, quisquam, nulla. Quidem accusantium quod eos. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Incidunt accusantium soluta sed perferendis neque fuga eum enim nostrum odit, placeat labore, pariatur, aperiam. Hic autem explicabo tenetur, ratione sed libero!\r\nddezddzad azd azd zad azd azd ddezddzad azd azd zad azd azd ddezddzad azd azd zad azd azd ddezddzad azd azd zad azd azd  ddezddzad azd azd zad azd azd ddezddzad azd azd zad azd azd ddezddzad azd azd zad azd azd ddezddzad azd azd zad azd azd ddezddzad azd azd zad azd azd ddezddzad azd azd zad azd azd', '2020-05-15 18:42:15', '2020-05-15 18:42:15', 'draft', 0, 'wolf.jpg', 1),
-(5, 'new post', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab voluptatem adipisci ullam, sit quibusdam voluptatum delectus veritatis autem nihil. Totam libero ut accusamus soluta in accusantium iusto cum harum voluptatibus! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veritatis quas sequi accusantium voluptatibus alias id, unde numquam voluptatem deleniti ipsa placeat, nam, molestias. Non, quisquam, nulla. Quidem accusantium quod eos. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Incidunt accusantium soluta sed perferendis neque fuga eum enim nostrum odit, placeat labore, pariatur, aperiam. Hic autem explicabo tenetur, ratione sed libero!', '2020-05-15 18:42:24', '2020-05-15 18:42:24', 'published', 0, 'wolf.jpg', 1),
-(6, 'new post', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab voluptatem adipisci ullam, sit quibusdam voluptatum delectus veritatis autem nihil. Totam libero ut accusamus soluta in accusantium iusto cum harum voluptatibus! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veritatis quas sequi accusantium voluptatibus alias id, unde numquam voluptatem deleniti ipsa placeat, nam, molestias. Non, quisquam, nulla. Quidem accusantium quod eos. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Incidunt accusantium soluta sed perferendis neque fuga eum enim nostrum odit, placeat labore, pariatur, aperiam. Hic autem explicabo tenetur, ratione sed libero!', '2020-05-15 18:42:24', '2020-05-15 18:42:24', 'published', 0, 'wolf.jpg', 1),
-(7, 'new post', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab voluptatem adipisci ullam, sit quibusdam voluptatum delectus veritatis autem nihil. Totam libero ut accusamus soluta in accusantium iusto cum harum voluptatibus! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veritatis quas sequi accusantium voluptatibus alias id, unde numquam voluptatem deleniti ipsa placeat, nam, molestias. Non, quisquam, nulla. Quidem accusantium quod eos. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Incidunt accusantium soluta sed perferendis neque fuga eum enim nostrum odit, placeat labore, pariatur, aperiam. Hic autem explicabo tenetur, ratione sed libero!', '2020-05-15 18:42:36', '2020-05-15 18:42:36', 'published', 0, 'wolf.jpg', 1),
-(8, 'new post', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab voluptatem adipisci ullam, sit quibusdam voluptatum delectus veritatis autem nihil. Totam libero ut accusamus soluta in accusantium iusto cum harum voluptatibus! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Veritatis quas sequi accusantium voluptatibus alias id, unde numquam voluptatem deleniti ipsa placeat, nam, molestias. Non, quisquam, nulla. Quidem accusantium quod eos. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Incidunt accusantium soluta sed perferendis neque fuga eum enim nostrum odit, placeat labore, pariatur, aperiam. Hic autem explicabo tenetur, ratione sed libero!', '2020-05-15 18:42:36', '2020-05-15 18:42:36', 'published', 0, 'wolf.jpg', 1);
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -75,7 +80,17 @@ CREATE TABLE IF NOT EXISTS `users` (
   `role` enum('user','admin') NOT NULL DEFAULT 'user',
   `banned` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Contraintes pour les tables déchargées
+--
+
+--
+-- Contraintes pour la table `comments`
+--
+ALTER TABLE `comments`
+  ADD CONSTRAINT `articleexist` FOREIGN KEY (`articleId`) REFERENCES `posts` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

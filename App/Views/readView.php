@@ -1,36 +1,74 @@
 <section id="article" class="container">
 	<div id="read" class="mt-5">
-		<?php 
-		if(!empty($article) && $article = $article->fetch()):
-			if($article->type() == "published"):
-				?>
-				<h1>Chapitre <?= $article->chapterNumber() ?>: <?= $article->title() ?></h1>
 
-				<figure class="figure">
-					<img src="/Public/images/<?= $article->pictureName()?>" class="figure-img img-fluid rounded" alt="Photo de Jean Forteroche ?" >
-					<figcaption class="figure-caption text-right"><?= $article->getFormatedUpdateDate() ?></figcaption>
-				</figure>
-				<p>
-					Lorem ipsum dolor sit amet, consectetur adipisicing elit. Modi laudantium quibusdam fuga itaque ipsa nulla, dolore cumque quidem, sint distinctio architecto nobis aspernatur repellat pariatur, mollitia consectetur hic cupiditate velit! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Magnam itaque asperiores natus quis, ducimus, doloribus quasi ipsum nam magni, sapiente est nobis earum recusandae praesentium non cumque rem labore quod? Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nemo cum libero rerum voluptates, quo repellendus. Amet voluptatibus veritatis voluptatem dicta odio doloribus, natus voluptate quasi similique omnis, nihil vero quis! Lorem ipsum dolor sit amet, consectetur adipisicing elit. Optio, soluta, accusamus. Itaque vero excepturi iste vitae unde amet, dolor ab, aut eos blanditiis voluptatibus repellat beatae minima distinctio fugiat et.
-				</p>
+	<?php if (!empty($article) && $article = $article->fetch()): ?>
+		<?php if ($article->type() == "published"): ?>
+
+			<h1>Chapitre <?=$article->chapterNumber()?>: <?=$article->title()?></h1>
+
+			<figure class="figure">
+				<img src="/Public/images/<?=$article->pictureName()?>" class="figure-img img-fluid rounded" alt="Photo de Jean Forteroche ?" >
+				<figcaption class="figure-caption text-right"><?=$article->getFormatedUpdateDate()?></figcaption>
+			</figure>
+
+			<p> <?=$article->content()?> </p>
 
 
-				<?php
-			else:
-				?>
+			<?php if ($authentified): ?>
+
+				<section id="articleComments">
+
+					<form class="mt-5 border text-left p-5 " method="post" action="/comments/add" id="articleform">
+
+						<div class="form-group">
+							<label for="content">Commentaire</label>
+							<textarea class="form-control" id="content" name ="content"  rows="5" required></textarea>
+						</div>
+						<div class="form-group">
+							<input type="hidden" id="id" name="id" value="<?=$article->id()?>">
+						</div>
+						<div class="form-group text-center">
+							<button type="submit" class="btn btn-primary" id="savecomment">Ajouter le commentaire</button>
+						</div>
+					</form>
+
+				</section>
+
+				<?php if (!empty($comments)): ?>
+
+					<?php while ($comment = $comments->fetch()): ?>
+
+						<div class="card">
+	  						<h5 class="card-header"><?=$comment->author()?></h5>
+	  						<div class="card-body">
+	    						<em><?=$comment->getFormatedDate()?></em>
+	    						<p class="card-text"><?=$comment->content()?></p>
+
+	  						</div>
+						</div>
+
+					<?php endwhile;?>
+
+				<?php endif;?>
+
+			<?php else: ?>
+			<?php endif;?>
+
+
+		<?php else: ?>
+
 				<div class="alert alert-warning" role="alert">
 					Cette article n'existe pas.
 				</div>
-				<?php
-			endif;
-		else:
-			?>
-			<div class="alert alert-warning" role="alert">
-				Cette article n'existe pas.
-			</div>
-			<?php
-		endif;
 
-		?>
+		<?php endif;?>
+	<?php else: ?>
+
+				<div class="alert alert-warning" role="alert">
+					Cette article n'existe pas.
+				</div>
+
+	<?php endif;?>
+
 	</div>
 </section>
