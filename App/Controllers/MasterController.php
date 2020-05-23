@@ -23,7 +23,7 @@ class MasterController extends MyController {
 
 		if ($this->user->isAuthentifiedAdmin()):
 
-			$this->view->render('master', [], array('master'));
+			$this->view->render('master', [], array('master', 'masterAddEditDelete'));
 
 		else:
 
@@ -70,7 +70,7 @@ class MasterController extends MyController {
 		$responseArray = array();
 
 		foreach ($articles as $article) {
-			$postArray = ["entity" => "article", "title" => $article->title(), "excerpt" => $article->contentExcerpt(60), "chapterId" => $article->chapterNumber(), 'update' => $article->updateDate(), 'type' => $article->type()];
+			$postArray = ["entity" => "article", "id" => $article->id(), "title" => $article->title(), "excerpt" => $article->contentExcerpt(60), "chapterId" => $article->chapterNumber(), 'update' => $article->updateDate(), 'type' => $article->type()];
 			$responseArray[] = (object) $postArray;
 		}
 
@@ -86,38 +86,46 @@ class MasterController extends MyController {
 
 	}
 
-	public function addArticleAction() {
+	public function saveArticleAction() {
 
-		$pictureName = false;
+		if ($this->user->isAuthentifiedAdmin()):
 
-		if (!empty($this->Data->post)):
+			$pictureName = null;
 
-			if (!empty($this->Data->post['title']) && !empty($this->Data->post['chapternumber']) && !empty($this->Data->post['content']) && !empty($this->Data->post['type'])):
+			if (!empty($this->Data->post)):
 
-				$title = $this->Data->post['title'];
-				$chapternumber = $this->Data->post['chapternumber'];
-				$content = $this->Data->post['content'];
-				$type = $this->Data->post['type'];
+				if (!empty($this->Data->post['title']) && !empty($this->Data->post['chapternumber']) && !empty($this->Data->post['content']) && !empty($this->Data->post['type'])):
 
-				if (!empty($_FILES) AND !empty($_FILES['picture'])):
-					$picture = new Picture($_FILES['picture']);
+					$title = $this->Data->post['title'];
+					$chapternumber = $this->Data->post['chapternumber'];
+					$content = $this->Data->post['content'];
+					$type = $this->Data->post['type'];
 
-					if (!$picture->hasErrors()):
-						$pictureName = $this->uploadPicture($picture);
-					else:
-						echo "une erreur est survenue avec l'image choisie";
-						exit;
+					if (!empty($_FILES) AND !empty($_FILES['picture'])):
+						$picture = new Picture($_FILES['picture']);
+
+						if (!$picture->hasErrors()):
+							$pictureName = $this->uploadPicture($picture);
+						else:
+							echo "une erreur est survenue avec l'image choisie";
+							exit;
+						endif;
 					endif;
+
+					$id = !empty($this->Data->post['id']) ?? null;
+
+					echo $this->articlesManager->save($title, $chapternumber, $content, $type, $pictureName, $id);
+
+				else:
+					echo "Des champs obligatoires ne sont pas remplis";
 				endif;
 
-				echo $this->articlesManager->add($title, $chapternumber, $content, $type, $pictureName != false ? $pictureName : null);
-
 			else:
-				echo "Des champs obligatoires ne sont pas remplis";
+				echo "Des champs obligatoire ne sont pas remplis";
 			endif;
 
 		else:
-			echo "Des champs obligatoire ne sont pas remplis";
+			header("Location: /");
 		endif;
 
 	}
@@ -129,6 +137,27 @@ class MasterController extends MyController {
 		$this->picturesManager = new PicturesManager();
 
 		return $this->picturesManager->uploadPicture($picture);
+
+	}
+
+	public function editAction() {
+
+		if ($target = $this->Data->get['target']):
+
+			if ($id = $this->Data->get['id']):
+
+				$article = $this->articlesManager->find($id)->fetch();
+
+				$postArray = ["entity" => "article", "id" => $article->id(), "title" => $article->title(), "content" => $article->content(), "chapterId" => $article->chapterNumber(), 'type' => $article->type(), 'pictureName' => $article->pictureName()];
+
+				echo json_encode((object) $postArray);
+				exit;
+
+			endif;
+
+		endif;
+
+		echo false;
 
 	}
 
