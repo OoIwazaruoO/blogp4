@@ -76,7 +76,7 @@
 			<p>Image <em>2mo max</em>: <input id="pictureUpload" type="file" name="picture" accept="image/gif,image/png, image/jpeg, image/jpg"></p>
 			<img src="/Public/images/wolf.jpg"  id="picturePreview" class="w-50">
 			<input type="hidden" name="id" id="id" value="">
-			<input type="hidden" name="token" value="<?=!empty($token) ?? null?>">
+			<input type="hidden" name="token" value="<?=$token ?? "notoken"?>">
 			<input type="hidden" name="MAX_FILE_SIZE" value="2097152">
 		</div>
 		<div id="flashformerror" class="mt-5"></div>
@@ -84,6 +84,19 @@
 			<button type="submit" class="btn btn-primary" id="savepost">Sauvegarder le chapitre</button>
 		</div>
 	</form>
+
+	<form class="mt-5 border text-left p-5 d-none" method="post" action="#" id="commentform">
+		<div class="form-group">
+			<label for="commentContent">Commentaire de <span id="commentAuthor"></span></label>
+			<textarea class="form-control" id="commentContent" name ="commentContent"  rows="5" required></textarea>
+			<input type="hidden" id="commentId" name="commentId" value="">
+		</div>
+
+		<div class="form-group text-center">
+			<button type="submit" class="btn btn-primary" id="editcomment">Modifier le commentaire</button>
+		</div>
+	</form>
+	<div id="flashcomment"></div>
 
 
 
@@ -106,7 +119,7 @@
 	<table class="table mt-5 d-none" id="commenttable">
 		<thead class="thead-dark">
 			<tr>
-				<th scope="col">Id</th>
+				<th scope="col">Article n°</th>
 				<th scope="col">Auteur</th>
 				<th scope="col">commentaire</th>
 				<th scope="col">Créé le</th>

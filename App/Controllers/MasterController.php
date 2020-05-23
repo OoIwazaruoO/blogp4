@@ -94,7 +94,7 @@ class MasterController extends MyController {
 		$responseArray = array();
 
 		foreach ($comments as $comment):
-			$postArray = ["entity" => "comment", "id" => $comment->id(), "author" => $comment->author(), "content" => $comment->content(), "creationDate" => $comment->getFormatedDate(), 'status' => $comment->status(), "articleId" => $comment->articleId()];
+			$postArray = ["entity" => "comment", "id" => $comment->id(), "author" => $comment->author(), "content" => $comment->content(), "creationDate" => $comment->getFormatedDate(), 'status' => $comment->status(), "articleId" => $comment->articleId(), "reported" => $comment->reported()];
 			$responseArray[] = (object) $postArray;
 		endforeach;
 
@@ -166,6 +166,26 @@ class MasterController extends MyController {
 
 	}
 
+	public function saveEditedCommentAction() {
+
+		if ($this->user->isAuthentifiedAdmin()):
+
+			if (!empty($this->Data->post)):
+
+				if (!empty($this->Data->post['commentId']) && !empty($this->Data->post['commentContent'])):
+					echo $this->commentsManager->adminEdit($this->Data->post['commentContent'], $this->Data->post['commentId']);
+				else:
+					echo "Des données sont manquantes";
+				endif;
+
+			endif;
+
+		else:
+			echo false;
+		endif;
+
+	}
+
 	private function uploadPicture(Picture $picture) {
 
 		$this->picturesManager = new PicturesManager();
@@ -182,11 +202,30 @@ class MasterController extends MyController {
 
 				if ($id = $this->Data->get['id']):
 
+					switch ($target):
+				case "article":
 					$article = $this->articlesManager->find($id)->fetch();
 
 					$postArray = ["entity" => "article", "id" => $article->id(), "title" => $article->title(), "content" => $article->content(), "chapterId" => $article->chapterNumber(), 'type' => $article->type(), 'pictureName' => $article->pictureName()];
 
 					echo json_encode((object) $postArray);
+					break;
+
+				case "comment":
+
+					$comment = $this->commentsManager->find($id)->fetch();
+
+					$postArray = ["entity" => "comment", "id" => $comment->id(), "content" => $comment->content(), "author" => $comment->author()];
+
+					echo json_encode((object) $postArray);
+
+					break;
+				default:
+					echo false;
+					break;
+
+					endswitch;
+
 					exit;
 
 				endif;
@@ -213,7 +252,7 @@ class MasterController extends MyController {
 					echo $this->articlesManager->delete($id);
 					break;
 				case 'comment':
-					echo $this->commentsManager->delete($id);
+					echo $this->commentsManager->setAsDeleted($id);
 					break;
 				case "user":
 					echo $this->usersManager->bann($id);

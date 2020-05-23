@@ -27,6 +27,11 @@ class EntityAction {
             this.confirmAction(e);
         })
 
+        $("#editcomment").click(e =>{
+            e.preventDefault();
+            this.saveComment()
+        })
+
     }
 
     showArticleForm() {
@@ -34,10 +39,15 @@ class EntityAction {
         $("#chaptertable").addClass("d-none");
     }
 
+    showCommentForm(){
+        $("#commentform").removeClass("d-none");
+        $("#commenttable").addClass("d-none"); 
+    }
+
     tinyInit() {
 
         tinymce.init({
-            selector: "textarea",
+            selector: "textarea#content",
             language: 'fr_FR',
             language_url: '/Public/js/fr_FR.js',
             width: "100%",
@@ -89,6 +99,22 @@ class EntityAction {
 
     }
 
+    saveComment(){
+        let url = "/master/saveEditedComment"
+
+        var fd = new FormData(document.querySelector("#commentform"));
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: fd,
+            contentType: false,
+            processData: false,
+            success: this.saveCommentSuccess.bind(this)
+        });
+
+    }
+
     savePostSuccess(data) {
 
         if (data == 1) {
@@ -96,10 +122,30 @@ class EntityAction {
             $("#flashformsuccess").html("<div class=\"alert alert-success\" role=\"alert\">Le chapitre a bien était sauvegardé!</div>");
             $("#articleform").addClass("d-none");
             setTimeout((e) => {
-                $("#flashformsuccess").html("");
-                this.loadlist();
+                $("#flashcomment").html("");
+                $("#chaptertable").removeClass("d-none"); 
             }, 2500);
             this.resetPostForm();
+        } else {
+            $("#flashcomment").html("<div class=\"alert alert-danger\" role=\"alert\">" + data + "</div>");
+            setTimeout((e) => {
+                $("#flashformerror").html("");
+            }, 3000);
+        }
+
+    }
+
+    saveCommentSuccess(data) {
+        console.log(data);
+        if (data == 1) {
+
+            $("#flashformsuccess").html("<div class=\"alert alert-success\" role=\"alert\">Le commentaire a bien était modifié!</div>");
+            $("#commentform").addClass("d-none");
+            setTimeout((e) => {
+                $("#flashformsuccess").html("");
+                $("#commenttable").removeClass("d-none"); 
+            }, 2500);
+            this.resetCommentForm();
         } else {
             $("#flashformerror").html("<div class=\"alert alert-danger\" role=\"alert\">" + data + "</div>");
             setTimeout((e) => {
@@ -127,9 +173,32 @@ class EntityAction {
 
     }
 
+    getCommentSuccess(data) {
+        console.log(data);
+        if (data != false) {
+
+            let commentData = JSON.parse(data);
+
+            $("#commentAuthor").text(commentData.author);
+            $("#commentContent").val(commentData.content);
+            $("#commentId").val(commentData.id);
+
+
+            this.showCommentForm();
+        }
+
+
+    }
+
     resetPostForm() {
         $("#articleform")[0].reset();
         $("#picturePreview").attr("src", "/Public/images/wolf.jpg");
+    }
+
+    resetCommentForm(){
+        $("#commentform")[0].reset();
+        $("#commentAuthor").text("");
+        $("#commenttable").addClass('d-none');
     }
 
     confirmAction(e) {
@@ -165,11 +234,19 @@ class EntityAction {
 
                     } else if (this.action == "edit") {
 
-                        $.ajax({
-                            type: "GET",
-                            url: this.url,
-                            success: this.getPostSuccess.bind(this)
-                        });
+                        if (this.target == "article") {
+                            $.ajax({
+                                type: "GET",
+                                url: this.url,
+                                success: this.getPostSuccess.bind(this)
+                            });
+                        } else if (this.target == "comment") {
+                            $.ajax({
+                                type: "GET",
+                                url: this.url,
+                                success: this.getCommentSuccess.bind(this)
+                            });
+                        }
                     }
 
                 }
@@ -186,12 +263,15 @@ class EntityAction {
 
             let message;
 
-            if (this.target != "user") {
-                message = this.target + " Supprimé";
-
-            } else {
+            if (this.target == "user") {
                 message = "Utilisateur banni";
+               
 
+            } else if(this.target ="comment") {
+                
+                message = "Commentaire marqué comme supprimé";
+            }else{
+                message = "article supprimé";
             }
 
             this.targetedRow.html("<td colspan=6><div class=\"alert alert-info\">" + message + "</div></td>")

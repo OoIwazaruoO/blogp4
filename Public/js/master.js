@@ -25,6 +25,8 @@ class ListLoader {
         this.orderByEl = $("#orderBy");
 
         this.articleForm = $("#articleform");
+        this.commentForm = $("#commentform");
+
         this.chapterTable = $("#chaptertable");
         this.commentTable = $("#commenttable");
         this.userTable = $("#usertable");
@@ -33,7 +35,7 @@ class ListLoader {
         this.commentsOptGr = $("#optComments");
         this.usersOptGr = $("#optUsers");
 
-        this.tables = [this.articleForm, this.chapterTable, this.commentTable, this.userTable];
+        this.tables = [this.articleForm, this.commentForm, this.chapterTable, this.commentTable, this.userTable];
         this.optGroups = [this.articlesOptGr, this.commentsOptGr, this.usersOptGr];
 
 
@@ -137,8 +139,9 @@ class ListLoader {
                 this.articlesList.forEach(el => {
 
                     let type = el.type == "published" ? "publié" : "brouillon";
+                    let alertClass = el.type == "published" ? "success" : "warning";
 
-                    htmlStr += "<tr id=\"articles" + el.id + "\"> <th scope=\"row\">" + el.chapterId + "</th> <td>" + el.title + "</td> <td>" + el.excerpt + "</td> <td>" + el.update + "</td> <td>" + type + "</td> <td class=\"d-flex flex-column\"><a data-action=\"edit\" data-target=\"article\" data-id=" + el.id + " href=\"#\" class=\"text-success\">modifier</a><a data-action=\"delete\" data-target=\"article\" data-id=" + el.id + " href=\"#\" class=\"text-danger\">supprimer</a></td> </tr>";
+                    htmlStr += "<tr id=\"article" + el.id + "\" class=\"alert-" + alertClass + "\"> <th scope=\"row\">" + el.chapterId + "</th> <td>" + el.title + "</td> <td>" + el.excerpt + "</td> <td>" + el.update + "</td> <td>" + type + "</td> <td class=\"d-flex flex-column\"><a data-action=\"edit\" data-target=\"article\" data-id=" + el.id + " href=\"#\" class=\"text-success\">modifier</a><a data-action=\"delete\" data-target=\"article\" data-id=" + el.id + " href=\"#\" class=\"text-danger\">supprimer</a></td> </tr>";
                 })
 
                 this.chaptersTBody.html(htmlStr);
@@ -149,8 +152,9 @@ class ListLoader {
 
 
                 this.commentsList.forEach(el =>{
+                    let alertClass = el.reported == true ? "danger" : "success";
 
-                    htmlStr += "<tr id=\"comments" + el.id + "\"> <th scope=\"row\">" + el.articleId + "</th> <td>" + el.author + "</td> <td>" + el.content + "</td> <td>" + el.creationDate + "</td> <td>" + el.status + "</td> <td class=\"d-flex flex-column\"><a data-action=\"edit\" data-target=\"comment\" data-id=" + el.id + " href=\"#\" class=\"text-success\">modifier</a><a data-action=\"delete\" data-target=\"comment\" data-id=" + el.id + " href=\"#\" class=\"text-danger\">supprimer</a></td> </tr>";
+                    htmlStr += "<tr id=\"comment" + el.id + "\" class=\"alert-" + alertClass + "\"> <th scope=\"row\">" + el.articleId + "</th> <td>" + el.author + "</td> <td>" + el.content + "</td> <td>" + el.creationDate + "</td> <td>" + el.status + "</td> <td class=\"d-flex flex-column\"><a data-action=\"edit\" data-target=\"comment\" data-id=" + el.id + " href=\"#\" class=\"text-success\">modifier</a><a data-action=\"delete\" data-target=\"comment\" data-id=" + el.id + " href=\"#\" class=\"text-danger\">supprimer</a></td> </tr>";
                 })
 
                 this.commentsTBody.html(htmlStr);
@@ -161,8 +165,9 @@ class ListLoader {
 
 
                 this.usersList.forEach(el =>{
+                    let alertClass = el.banned == true ? "danger" : el.confirmed == true ?"success" : "warning";
 
-                    htmlStr += "<tr id=\"users" + el.id + "\"> <th scope=\"row\">" + el.login + "</th> <td>" + el.inscriptionDate + "</td> <td>" + el.role + "</td> <td>" + el.confirmed + "</td> <td>" + el.banned + "</td> <td class=\"d-flex flex-column\"><a data-action=\"delete\" data-target=\"user\" data-id=" + el.id + " href=\"#\" class=\"text-danger\">Bannir</a></td> </tr>";
+                    htmlStr += "<tr id=\"user" + el.id + "\" class=\"alert-" + alertClass + "\"> <th scope=\"row\">" + el.login + "</th> <td>" + el.inscriptionDate + "</td> <td>" + el.role + "</td> <td>" + el.confirmed + "</td> <td>" + el.banned + "</td> <td class=\"d-flex flex-column\"><a data-action=\"delete\" data-target=\"user\" data-id=" + el.id + " href=\"#\" class=\"text-danger\">Bannir</a></td> </tr>";
                 })
 
                 this.usersTBody.html(htmlStr);

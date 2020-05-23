@@ -21,10 +21,27 @@ class CommentsManager extends Manager {
 
 	}
 
+	public function setAsDeleted($id) {
+		$request = $this->dao->prepare("UPDATE {$this->targetTable} SET status = \"DELETED\" WHERE id = :id");
+		$deleted = $request->execute(array(":id" => $id));
+
+		return $deleted;
+	}
+
 	public function edit($content, $id) {
-		$request = $this->dao->prepare('UPDATE {$this->targetTable} SET content = :content WHERE id = :id');
-		$request->execute(array(":content" => $content,
+		$request = $this->dao->prepare("UPDATE {$this->targetTable} SET content = :content WHERE id = :id");
+		$edited = $request->execute(array(":content" => $content,
 			":id" => $id));
+
+		return $edited;
+	}
+
+	public function adminEdit($content, $id) {
+		$request = $this->dao->prepare("UPDATE {$this->targetTable} SET content = :content, status = \"EDITED\" WHERE id = :id");
+		$edited = $request->execute(array(":content" => $content,
+			":id" => $id));
+
+		return $edited;
 	}
 
 	public function deleteFromArticle($postId) {

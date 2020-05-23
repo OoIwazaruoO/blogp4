@@ -22,7 +22,7 @@
 
 						<div class="form-group">
 							<label for="content">Commentaire</label>
-							<textarea class="form-control" id="content" name ="content"  rows="5" required></textarea>
+							<textarea class="form-control" id="content" name ="content"  rows="5" minlength="4" maxlength="255" required></textarea>
 						</div>
 						<div class="form-group">
 							<input type="hidden" id="id" name="id" value="<?=$article->id()?>">
@@ -42,7 +42,18 @@
 	  						<h5 class="card-header"><?=$comment->author()?></h5>
 	  						<div class="card-body">
 	    						<em><?=$comment->getFormatedDate()?></em>
-	    						<p class="card-text"><?=$comment->content()?></p>
+	    						<p class="card-text">
+
+	    							<?php if ($comment->status() == "Ok"): ?>
+	    						    <?=$comment->content()?>
+	    						    <?php elseif ($comment->status() == "EDITED"): ?>
+	    						    <?=$comment->content() . " <em class=\"text-info\">Modifié par l'administrateur</em>"?>
+	    							<?php else: ?>
+	    							<?="Commentaire supprimé"?>
+	    							<?php endif;?>
+
+
+	    							</p>
 
 	  						</div>
 						</div>
