@@ -33,7 +33,7 @@ abstract class Manager {
 	}
 
 	public function delete($id) {
-		$deleted = $this->dao->query("DELETE from {$this->targetTable} WHERE id = ?");
-		return $deleted;
+		$deleted = $this->dao->prepare("DELETE from {$this->targetTable} WHERE id = ?");
+		return $deleted->execute(array($id));
 	}
 }

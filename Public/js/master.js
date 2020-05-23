@@ -35,9 +35,9 @@ class ListLoader {
 
         this.tables = [this.articleForm, this.chapterTable, this.commentTable, this.userTable];
         this.optGroups = [this.articlesOptGr, this.commentsOptGr, this.usersOptGr];
-        
 
-        this.chapterTBody = $("#chaptertable tbody");
+
+        this.chaptersTBody = $("#chaptertable tbody");
         this.commentsTBody = $("#commenttable tbody");
         this.usersTBody = $("#usertable tbody");
 
@@ -73,6 +73,13 @@ class ListLoader {
             }
 
 
+        })
+
+        this.orderByEl.change(e=>{
+
+            this.articlesListUpToDate = false;
+            this.commentsListUpToDate = false;
+            this.usersListUpToDate = false;
         })
     }
 
@@ -113,6 +120,8 @@ class ListLoader {
                     success: this.loadListSuccess.bind(this)
                 });
 
+            } else {
+                this.displayList(this.target);
             }
         }
     }
@@ -129,15 +138,36 @@ class ListLoader {
 
                     let type = el.type == "published" ? "publié" : "brouillon";
 
-                    htmlStr += "<tr> <th scope=\"row\">" + el.chapterId + "</th> <td>" + el.title + "</td> <td>" + el.excerpt + "</td> <td>" + el.update + "</td> <td>" + type + "</td> <td class=\"d-flex flex-column\"><a data-action=\"edit\" data-target=\"article\" data-id=" + el.id + " href=\"#\" class=\"text-success\">modifier</a><a data-action=\"delete\" data-target=\"article\" data-id=" + el.id + " href=\"#\" class=\"text-danger\">supprimer</a></td> </tr>";
+                    htmlStr += "<tr id=\"articles" + el.id + "\"> <th scope=\"row\">" + el.chapterId + "</th> <td>" + el.title + "</td> <td>" + el.excerpt + "</td> <td>" + el.update + "</td> <td>" + type + "</td> <td class=\"d-flex flex-column\"><a data-action=\"edit\" data-target=\"article\" data-id=" + el.id + " href=\"#\" class=\"text-success\">modifier</a><a data-action=\"delete\" data-target=\"article\" data-id=" + el.id + " href=\"#\" class=\"text-danger\">supprimer</a></td> </tr>";
                 })
 
+                this.chaptersTBody.html(htmlStr);
+                this.showTable(this.chapterTable);
 
                 break;
             case "comments":
 
+
+                this.commentsList.forEach(el =>{
+
+                    htmlStr += "<tr id=\"comments" + el.id + "\"> <th scope=\"row\">" + el.articleId + "</th> <td>" + el.author + "</td> <td>" + el.content + "</td> <td>" + el.creationDate + "</td> <td>" + el.status + "</td> <td class=\"d-flex flex-column\"><a data-action=\"edit\" data-target=\"comment\" data-id=" + el.id + " href=\"#\" class=\"text-success\">modifier</a><a data-action=\"delete\" data-target=\"comment\" data-id=" + el.id + " href=\"#\" class=\"text-danger\">supprimer</a></td> </tr>";
+                })
+
+                this.commentsTBody.html(htmlStr);
+                this.showTable(this.commentTable);
+
                 break;
             case "users":
+
+
+                this.usersList.forEach(el =>{
+
+                    htmlStr += "<tr id=\"users" + el.id + "\"> <th scope=\"row\">" + el.login + "</th> <td>" + el.inscriptionDate + "</td> <td>" + el.role + "</td> <td>" + el.confirmed + "</td> <td>" + el.banned + "</td> <td class=\"d-flex flex-column\"><a data-action=\"delete\" data-target=\"user\" data-id=" + el.id + " href=\"#\" class=\"text-danger\">Bannir</a></td> </tr>";
+                })
+
+                this.usersTBody.html(htmlStr);
+                this.showTable(this.userTable);
+
 
                 break;
             default:
@@ -146,8 +176,7 @@ class ListLoader {
 
         }
 
-        this.chapterTBody.html(htmlStr);
-        this.showTable(this.chapterTable);
+
 
     }
 
@@ -166,10 +195,10 @@ class ListLoader {
     }
 
     enableOptGroups(optGrToEnable) {
-    	this.orderByEl.val("id");
+        this.orderByEl.val("id");
 
         this.optGroups.forEach(el => {
-        	
+
             if (el == optGrToEnable) {
                 el.prop('disabled', false);
             } else {
@@ -182,9 +211,9 @@ class ListLoader {
     }
 
     loadListSuccess(data) {
-
+    
         let dataArray = JSON.parse(data);
-
+        
 
         if (dataArray[0]) {
 
@@ -194,6 +223,18 @@ class ListLoader {
                     this.articlesList = dataArray;
                     this.articlesListUpToDate = true;
                     this.displayList("articles");
+                    break;
+
+                case "comment":
+                    this.commentsList = dataArray;
+                    this.commentsListUpToDate = true;
+                    this.displayList('comments');
+
+                break;
+                case "user":
+                    this.usersList = dataArray;
+                    this.usersListUpToDate = true;
+                    this.displayList("users");
                     break;
 
                 default:

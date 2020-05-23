@@ -41,9 +41,11 @@ class CommentsController extends MyController {
 
 				if ($this->comment->hasErrors()):
 
-					foreach ($this->comment->errors() as $error) {
+					foreach ($this->comment->errors() as $error):
 						$_SESSION['flash']['error'][] = $error;
-					} else :
+					endforeach;
+
+				else:
 
 					if ($this->commentsManager->add($articleId, $author, $content)):
 						$_SESSION['flash']['success'][] = "Votre commentaire a bien était ajouté";

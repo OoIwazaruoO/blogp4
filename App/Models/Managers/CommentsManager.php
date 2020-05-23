@@ -67,4 +67,22 @@ class CommentsManager extends Manager {
 		return $commentsNumber;
 	}
 
+	public function findAllOrderBy($orderby = "id") {
+
+		$possibleOrderBy = array("id", "creationDate", "author", "status");
+
+		$index = array_search($orderby, $possibleOrderBy);
+
+		if (!$index):
+			$orderby = "id";
+		endif;
+
+		$result = $this->dao->query("SELECT * from {$this->targetTable} ORDER BY {$orderby}");
+
+		$result->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $this->className);
+
+		return $result;
+
+	}
+
 }

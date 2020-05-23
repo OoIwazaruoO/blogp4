@@ -5,7 +5,9 @@ use Core\MyController;
 use Entities\Picture;
 use Entities\User;
 use Managers\ArticlesManager;
+use Managers\CommentsManager;
 use Managers\PicturesManager;
+use Managers\UsersManager;
 
 class MasterController extends MyController {
 
@@ -16,6 +18,8 @@ class MasterController extends MyController {
 
 		$this->user = new User();
 		$this->articlesManager = new ArticlesManager($this->dao, "posts", "Entities\\Article");
+		$this->commentsManager = new CommentsManager($this->dao, "comments", "Entities\\Comment");
+		$this->usersManager = new UsersManager($this->dao, "users", "Entities\\User");
 
 	}
 
@@ -69,10 +73,10 @@ class MasterController extends MyController {
 
 		$responseArray = array();
 
-		foreach ($articles as $article) {
+		foreach ($articles as $article):
 			$postArray = ["entity" => "article", "id" => $article->id(), "title" => $article->title(), "excerpt" => $article->contentExcerpt(60), "chapterId" => $article->chapterNumber(), 'update' => $article->updateDate(), 'type' => $article->type()];
 			$responseArray[] = (object) $postArray;
-		}
+		endforeach;
 
 		echo json_encode($responseArray);
 
@@ -80,9 +84,41 @@ class MasterController extends MyController {
 
 	private function getCommentsList() {
 
+		if (!empty($this->Data->get['orderby'])):
+			$comments = $this->commentsManager->findAllOrderBy($this->Data->get['orderby'])->fetchAll();
+
+		else:
+			$comments = $this->commentsManager->findAll()->fetchAll();
+		endif;
+
+		$responseArray = array();
+
+		foreach ($comments as $comment):
+			$postArray = ["entity" => "comment", "id" => $comment->id(), "author" => $comment->author(), "content" => $comment->content(), "creationDate" => $comment->getFormatedDate(), 'status' => $comment->status(), "articleId" => $comment->articleId()];
+			$responseArray[] = (object) $postArray;
+		endforeach;
+
+		echo json_encode($responseArray);
+
 	}
 
 	private function getUsersList() {
+
+		if (!empty($this->Data->get['orderby'])):
+			$users = $this->usersManager->findAllOrderBy($this->Data->get['orderby'])->fetchAll();
+
+		else:
+			$users = $this->usersManager->findAll()->fetchAll();
+		endif;
+
+		$responseArray = array();
+
+		foreach ($users as $user):
+			$postArray = ["entity" => "user", "id" => $user->id(), "login" => $user->login(), "inscriptionDate" => $user->inscriptionDate(), "role" => $user->role(), 'confirmed' => $user->confirmed(), "banned" => $user->banned()];
+			$responseArray[] = (object) $postArray;
+		endforeach;
+
+		echo json_encode($responseArray);
 
 	}
 
@@ -132,8 +168,6 @@ class MasterController extends MyController {
 
 	private function uploadPicture(Picture $picture) {
 
-		echo realpath($picture->folder());
-
 		$this->picturesManager = new PicturesManager();
 
 		return $this->picturesManager->uploadPicture($picture);
@@ -142,22 +176,65 @@ class MasterController extends MyController {
 
 	public function editAction() {
 
-		if ($target = $this->Data->get['target']):
+		if ($this->user->isAuthentifiedAdmin()):
 
-			if ($id = $this->Data->get['id']):
+			if ($target = $this->Data->get['target']):
 
-				$article = $this->articlesManager->find($id)->fetch();
+				if ($id = $this->Data->get['id']):
 
-				$postArray = ["entity" => "article", "id" => $article->id(), "title" => $article->title(), "content" => $article->content(), "chapterId" => $article->chapterNumber(), 'type' => $article->type(), 'pictureName' => $article->pictureName()];
+					$article = $this->articlesManager->find($id)->fetch();
 
-				echo json_encode((object) $postArray);
-				exit;
+					$postArray = ["entity" => "article", "id" => $article->id(), "title" => $article->title(), "content" => $article->content(), "chapterId" => $article->chapterNumber(), 'type' => $article->type(), 'pictureName' => $article->pictureName()];
+
+					echo json_encode((object) $postArray);
+					exit;
+
+				endif;
 
 			endif;
 
+			echo false;
+
 		endif;
 
-		echo false;
+	}
+
+	public function deleteAction() {
+
+		if ($this->user->isAuthentifiedAdmin()):
+
+			if ($target = $this->Data->get['target']):
+
+				if ($id = $this->Data->get['id']):
+
+					switch ($target):
+
+				case 'article':
+					echo $this->articlesManager->delete($id);
+					break;
+				case 'comment':
+					echo $this->commentsManager->delete($id);
+					break;
+				case "user":
+					echo $this->usersManager->bann($id);
+					break;
+				default:
+					echo false;
+					break;
+
+					endswitch;
+
+					exit;
+
+				endif;
+
+				echo false;
+
+			endif;
+
+			echo false;
+
+		endif;
 
 	}
 

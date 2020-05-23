@@ -78,6 +78,35 @@ class UsersManager extends Manager {
 
 	}
 
+	public function bann($id = null) {
+
+		if ($id != null):
+			$req = $this->dao->prepare("UPDATE {$this->targetTable} SET banned = 1 WHERE id = :id");
+			return $req->execute(array(":id" => $id));
+		endif;
+
+		return false;
+
+	}
+
+	public function findAllOrderBy($orderby = "id") {
+
+		$possibleOrderBy = array("id", "inscriptionDate", "role", "login");
+
+		$index = array_search($orderby, $possibleOrderBy);
+
+		if (!$index):
+			$orderby = "id";
+		endif;
+
+		$result = $this->dao->query("SELECT * from {$this->targetTable} ORDER BY {$orderby}");
+
+		$result->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $this->className);
+
+		return $result;
+
+	}
+
 	public function sendVerificationMail($login, $mail, $confirmationToken) {
 
 		$login = $login;

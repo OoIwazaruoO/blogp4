@@ -1,7 +1,7 @@
 class EntityAction {
 
     constructor() {
-    	this.init();
+        this.init();
     }
 
     init() {
@@ -143,27 +143,31 @@ class EntityAction {
 
                 if (data.id) {
 
-                    let action = data.action;
-                    let target = data.target;
-                    let id = data.id;
+                    this.action = data.action;
+                    this.target = data.target;
+                    this.id = data.id;
 
-                    let url = "/master/" + action + "/target/" + target + "/id/" + id;
+                    this.url = "/master/" + this.action + "/target/" + this.target + "/id/" + this.id;
 
-                    if (action == "delete") {
 
-                        if (confirm("êtes vous sur de vouloir supprimmer " + target)) {
+                    if (this.action == "delete") {
+
+                        this.targetedRow = $("#" + this.target + this.id);
+
+
+                        if (confirm("êtes vous sur de vouloir supprimmer " + this.target)) {
                             $.ajax({
                                 type: "GET",
-                                url: url,
-                                success: deleteSuccess
+                                url: this.url,
+                                success: this.deleteSuccess.bind(this)
                             });
                         }
 
-                    } else if (action == "edit") {
+                    } else if (this.action == "edit") {
 
                         $.ajax({
                             type: "GET",
-                            url: url,
+                            url: this.url,
                             success: this.getPostSuccess.bind(this)
                         });
                     }
@@ -173,6 +177,28 @@ class EntityAction {
             }
 
         }
+    }
+
+    deleteSuccess(result) {
+
+
+        if (result == 1) {
+
+            let message;
+
+            if (this.target != "user") {
+                message = this.target + " Supprimé";
+
+            } else {
+                message = "Utilisateur banni";
+
+            }
+
+            this.targetedRow.html("<td colspan=6><div class=\"alert alert-info\">" + message + "</div></td>")
+
+
+        }
+
     }
 }
 
