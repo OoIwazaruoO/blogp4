@@ -89,6 +89,17 @@ class UsersManager extends Manager {
 
 	}
 
+	public function unbann($id = null) {
+
+		if ($id != null):
+			$req = $this->dao->prepare("UPDATE {$this->targetTable} SET banned = 0 WHERE id = :id");
+			return $req->execute(array(":id" => $id));
+		endif;
+
+		return false;
+
+	}
+
 	public function sendVerificationMail($login, $mail, $confirmationToken) {
 
 		$login = $login;

@@ -166,8 +166,12 @@ class ListLoader {
 
                 this.usersList.forEach(el => {
                     let alertClass = el.banned == true ? "danger" : el.confirmed == true ? "success" : "warning";
+                    let confirmed = el.confirmed == true ? "oui" : "non"
+                    let banned = el.banned == true ? "oui" : "non";
+                    let bannLink = el.banned == true ? "<a data-action=\"unbann\" data-target=\"users\" data-id=" + el.id + " href=\"#\" class=\"text-success\">Débannir</a>" : "<a data-action=\"bann\" data-target=\"users\" data-id=" + el.id + " href=\"#\" class=\"text-danger\">Bannir</a>";
 
-                    htmlStr += "<tr id=\"users" + el.id + "\" class=\"alert-" + alertClass + "\"> <th scope=\"row\">" + el.login + "</th> <td>" + el.inscriptionDate + "</td> <td>" + el.role + "</td> <td>" + el.confirmed + "</td> <td>" + el.banned + "</td> <td class=\"d-flex flex-column\"><a data-action=\"delete\" data-target=\"users\" data-id=" + el.id + " href=\"#\" class=\"text-danger\">Bannir</a></td> </tr>";
+
+                    htmlStr += "<tr id=\"users" + el.id + "\" class=\"alert-" + alertClass + "\"> <th scope=\"row\">" + el.login + "</th> <td>" + el.inscriptionDate + "</td> <td>" + el.role + "</td> <td>" + confirmed + "</td> <td>" + banned + "</td> <td class=\"d-flex flex-column\">" + bannLink + "</td> </tr>";
                 })
 
                 this.usersTBody.html(htmlStr);
@@ -220,7 +224,6 @@ class ListLoader {
         if (data) {
 
             let dataArray = JSON.parse(data);
-
 
             if (dataArray[0]) {
 

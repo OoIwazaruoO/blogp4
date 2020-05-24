@@ -142,7 +142,7 @@ class EntityAction {
     }
 
     saveCommentSuccess(data) {
-        console.log(data);
+        
         if (data == 1) {
 
             $("#flashcomment").html("<div class=\"alert alert-success\" role=\"alert\">Le commentaire a bien était modifié!</div>");
@@ -226,7 +226,7 @@ class EntityAction {
                     this.url = "/" + this.target + "/" + this.action + "/id/" + this.id;
                     console.log(this.url);
 
-                    if (this.action == "delete") {
+                    if (this.action == "delete" || this.action == "bann") {
 
                         this.targetedRow = $("#" + this.target + this.id);
 
@@ -239,7 +239,7 @@ class EntityAction {
                             });
                         }
 
-                    } else if (this.action == "edit") {
+                    } else if (this.action == "edit" || this.action == "unbann") {
 
                         if (this.target == "articles") {
                             $.ajax({
@@ -253,6 +253,12 @@ class EntityAction {
                                 url: this.url,
                                 success: this.getCommentSuccess.bind(this)
                             });
+                        } else if(this.target == "users"){
+                            $.ajax({
+                                type: "GET",
+                                url: this.url,
+                                success: this.unbannSuccess.bind(this)
+                            });
                         }
                     }
 
@@ -261,6 +267,28 @@ class EntityAction {
             }
 
         }
+    }
+
+    unbannSuccess(result){
+
+        if(result == 1){
+           
+           
+            $("#flashcomment").html("<div class=\"alert alert-success\" role=\"alert\">L'utilisateur a était débanni!</div>");
+            $("#usertable").addClass("d-none");
+            setTimeout((e) => {
+                $("#flashcomment").html("");
+                $("#usertable").removeClass("d-none"); 
+            }, 2500);
+            this.resetCommentForm();
+        } else {
+            $("#flashcomment").html("<div class=\"alert alert-danger\" role=\"alert\">" + data + "</div>");
+            setTimeout((e) => {
+                $("#flashformerror").html("");
+            }, 3000);
+        
+        }
+
     }
 
     deleteSuccess(result) {

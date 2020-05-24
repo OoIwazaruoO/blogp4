@@ -129,7 +129,7 @@ class UsersController extends MyController {
 		header("location: /");
 	}
 
-	public function deleteAction() {
+	public function bannAction() {
 
 		if ($this->user->isAuthentifiedAdmin()):
 
@@ -139,6 +139,24 @@ class UsersController extends MyController {
 					echo $this->usersManager->bann($id);
 				else:
 					echo "Vous ne pouvez vous pas vous bannir vous même";
+				endif;
+
+			endif;
+
+		endif;
+
+	}
+
+	public function unbannAction() {
+
+		if ($this->user->isAuthentifiedAdmin()):
+
+			if ($id = $this->Data->get['id']):
+
+				if ($id != $_SESSION['auth']['id']):
+					echo $this->usersManager->unbann($id);
+				else:
+					echo "impossible de débannir cet utilisateur";
 				endif;
 
 			endif;
