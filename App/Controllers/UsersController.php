@@ -111,6 +111,24 @@ class UsersController extends MyController {
 
 	}
 
+	public function logoutAction() {
+
+		if ($this->user->isAuthentified()):
+
+			$this->destroySession();
+			$this->startSessionIfNotStarted();
+
+			$_SESSION['flash']['success'] = [];
+			$_SESSION['flash']['success'][] = "Vous êtes déconnecté";
+
+		else:
+			$_SESSION['flash']['error'] = [];
+			$_SESSION['flash']['error'][] = "Vous n'êtes pas connecté";
+		endif;
+
+		header("location: /");
+	}
+
 	public function deleteAction() {
 
 		if ($this->user->isAuthentifiedAdmin()):

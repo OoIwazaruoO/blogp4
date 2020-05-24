@@ -8,4 +8,18 @@ setTimeout(e=>{
 		$("#error-info").remove();
 	}
 
+
+
 }, 2500)
+
+if(typeof $("#logout") != "undefined"){
+	 $("#logout").click((e) => {
+	 	e.preventDefault();
+	 	if(confirm("Confirmez vous la déconnexion?")){
+	 		$("#logout").unbind("click");
+	 		setTimeout(e=>{
+	 			$("#logout")[0].click();
+	 		}, 500)
+	 	}
+	 })
+}
