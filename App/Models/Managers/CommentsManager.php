@@ -72,6 +72,16 @@ class CommentsManager extends Manager {
 		return $request;
 	}
 
+	public function report($commentId, $postId) {
+
+		$request = $this->dao->prepare("UPDATE {$this->targetTable} SET reported = 1 WHERE id = :id AND articleId = :articleId AND status = \"OK\"");
+		$reported = $request->execute(array(":id" => $commentId,
+			":articleId" => $postId));
+
+		return $reported;
+
+	}
+
 	public function countComments($articleId = null) {
 
 		$request = $articleId !== null ? $this->dao->prepare("SELECT COUNT(*) FROM {$this->targetTable} WHERE  articleId = :articleId")

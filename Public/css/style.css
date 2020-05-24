@@ -28,7 +28,6 @@
 .icon-exit {
   font-size: 2rem;
   color: grey;
-  cursor: pointer;
   position: absolute;
   right: 1rem;
   top: 1rem;
@@ -40,6 +39,14 @@
 
 .icon-exit:before {
   content: "\ea14";
+}
+
+.icon-flag {
+ 	font-size: 1.5rem;
+}
+
+.icon-flag:before {
+  content: "\e9cc";
 }
 
 

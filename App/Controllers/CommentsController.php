@@ -121,6 +121,33 @@ class CommentsController extends MyController {
 		endif;
 	}
 
+	public function reportAction() {
+
+		if ($articleId = $this->Data->get['article'] ?? false):
+
+			if ($commentId = $this->Data->get['id'] ?? false):
+
+				if ($this->commentsManager->report($commentId, $articleId)):
+
+					$_SESSION['flash']['success'] = [];
+					$_SESSION['flash']['success'][] = "Commentaire signalé";
+
+				else:
+					$_SESSION['flash']['error'] = [];
+					$_SESSION['flash']['error'][] = "Ce commentaire ne peut pas être signalé";
+
+				endif;
+
+			endif;
+
+			header("Location: /articles/read/id/" . $articleId);
+
+		else:
+			header("Location: /articles");
+		endif;
+
+	}
+
 	public function deleteAction() {
 
 		if ($this->user->isAuthentifiedAdmin()):

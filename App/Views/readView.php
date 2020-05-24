@@ -41,18 +41,17 @@
 						<div class="card">
 	  						<h5 class="card-header"><?=strip_tags($comment->author())?></h5>
 	  						<div class="card-body">
+
 	    						<em><?=$comment->getFormatedDate()?></em>
 	    						<p class="card-text">
-
-	    							<?php if ($comment->status() == "OK"): ?>
-	    						    <?=strip_tags($comment->content())?>
-	    						    <?php elseif ($comment->status() == "EDITED"): ?>
+	    						<?php if ($comment->status() == "OK"): ?>
+	    						    	<?=strip_tags($comment->content())?>
+										<?=$comment->reported() ? "" : "<a class=\"icon-flag\" title=\"signaler le commentaire\" href=\"/comments/report/id/" . $comment->id() . "/article/" . $article->id() . "\"></a>"?>
+	    						<?php elseif ($comment->status() == "EDITED"): ?>
 	    						    <?=strip_tags($comment->content()) . " <em class=\"text-info\">Modifié par l'administrateur</em>"?>
-	    							<?php else: ?>
+	    						<?php else: ?>
 	    							<?="<span class=\"text-danger\">Commentaire supprimé</span>"?>
-	    							<?php endif;?>
-
-
+	    						<?php endif;?>
 	    							</p>
 
 	  						</div>
