@@ -9,6 +9,12 @@ class EntityAction {
         this.tinyInit();
         this.addListeners();
 
+        
+
+        setTimeout(e=>{
+            $("#success-info").remove();
+        }, 2000);
+
     }
 
     addListeners() {
@@ -82,7 +88,7 @@ class EntityAction {
 
     savePost() {
 
-        let url = "/master/saveArticle"
+        let url = "/articles/save"
 
         var fd = new FormData(document.querySelector("#articleform"));
         var files = $('#pictureUpload')[0].files[0];
@@ -100,7 +106,7 @@ class EntityAction {
     }
 
     saveComment(){
-        let url = "/master/saveEditedComment"
+        let url = "/comments/saveEdited"
 
         var fd = new FormData(document.querySelector("#commentform"));
 
@@ -122,12 +128,12 @@ class EntityAction {
             $("#flashformsuccess").html("<div class=\"alert alert-success\" role=\"alert\">Le chapitre a bien était sauvegardé!</div>");
             $("#articleform").addClass("d-none");
             setTimeout((e) => {
-                $("#flashcomment").html("");
+                $("#flashformsuccess").html("");
                 $("#chaptertable").removeClass("d-none"); 
             }, 2500);
             this.resetPostForm();
         } else {
-            $("#flashcomment").html("<div class=\"alert alert-danger\" role=\"alert\">" + data + "</div>");
+            $("#flashformerror").html("<div class=\"alert alert-danger\" role=\"alert\">" + data + "</div>");
             setTimeout((e) => {
                 $("#flashformerror").html("");
             }, 3000);
@@ -139,15 +145,15 @@ class EntityAction {
         console.log(data);
         if (data == 1) {
 
-            $("#flashformsuccess").html("<div class=\"alert alert-success\" role=\"alert\">Le commentaire a bien était modifié!</div>");
+            $("#flashcomment").html("<div class=\"alert alert-success\" role=\"alert\">Le commentaire a bien était modifié!</div>");
             $("#commentform").addClass("d-none");
             setTimeout((e) => {
-                $("#flashformsuccess").html("");
+                $("#flashcomment").html("");
                 $("#commenttable").removeClass("d-none"); 
             }, 2500);
             this.resetCommentForm();
         } else {
-            $("#flashformerror").html("<div class=\"alert alert-danger\" role=\"alert\">" + data + "</div>");
+            $("#flashcomment").html("<div class=\"alert alert-danger\" role=\"alert\">" + data + "</div>");
             setTimeout((e) => {
                 $("#flashformerror").html("");
             }, 3000);
@@ -156,7 +162,7 @@ class EntityAction {
     }
 
     getPostSuccess(data) {
-
+        console.log(data);
         if (data != false) {
 
             let postData = JSON.parse(data);
@@ -193,6 +199,7 @@ class EntityAction {
     resetPostForm() {
         $("#articleform")[0].reset();
         $("#picturePreview").attr("src", "/Public/images/wolf.jpg");
+        $("#id").val("");
     }
 
     resetCommentForm(){
@@ -216,8 +223,8 @@ class EntityAction {
                     this.target = data.target;
                     this.id = data.id;
 
-                    this.url = "/master/" + this.action + "/target/" + this.target + "/id/" + this.id;
-
+                    this.url = "/" + this.target + "/" + this.action + "/id/" + this.id;
+                    console.log(this.url);
 
                     if (this.action == "delete") {
 
@@ -234,13 +241,13 @@ class EntityAction {
 
                     } else if (this.action == "edit") {
 
-                        if (this.target == "article") {
+                        if (this.target == "articles") {
                             $.ajax({
                                 type: "GET",
                                 url: this.url,
                                 success: this.getPostSuccess.bind(this)
                             });
-                        } else if (this.target == "comment") {
+                        } else if (this.target == "comments") {
                             $.ajax({
                                 type: "GET",
                                 url: this.url,
@@ -263,11 +270,11 @@ class EntityAction {
 
             let message;
 
-            if (this.target == "user") {
+            if (this.target == "users") {
                 message = "Utilisateur banni";
                
 
-            } else if(this.target ="comment") {
+            } else if(this.target == "comments") {
                 
                 message = "Commentaire marqué comme supprimé";
             }else{

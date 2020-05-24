@@ -7,7 +7,7 @@ use Core\Manager;
 class UsersManager extends Manager {
 
 	public function __construct($dao, $table, $classname) {
-		parent::__construct($dao, $table, $classname);
+		parent::__construct($dao, $table, $classname, array("id", "inscriptionDate", "role", "login"));
 	}
 
 	public function findByMail($mail) {
@@ -86,24 +86,6 @@ class UsersManager extends Manager {
 		endif;
 
 		return false;
-
-	}
-
-	public function findAllOrderBy($orderby = "id") {
-
-		$possibleOrderBy = array("id", "inscriptionDate", "role", "login");
-
-		$index = array_search($orderby, $possibleOrderBy);
-
-		if (!$index):
-			$orderby = "id";
-		endif;
-
-		$result = $this->dao->query("SELECT * from {$this->targetTable} ORDER BY {$orderby}");
-
-		$result->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $this->className);
-
-		return $result;
 
 	}
 

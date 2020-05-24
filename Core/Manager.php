@@ -8,10 +8,11 @@ abstract class Manager {
 	protected $targetTable;
 	protected $className;
 
-	public function __construct($dao, $table, $className) {
+	public function __construct($dao, $table, $className, $field = ['id']) {
 		$this->dao = $dao;
 		$this->targetTable = $table;
 		$this->className = $className;
+		$this->field = $field;
 	}
 
 	public function find($id) {
@@ -30,6 +31,22 @@ abstract class Manager {
 
 		$result->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $this->className);
 		return $result;
+	}
+
+	public function findAllOrderBy($orderby = "id") {
+
+		$index = array_search($orderby, $this->field);
+
+		if (!$index):
+			$orderby = "id";
+		endif;
+
+		$result = $this->dao->query("SELECT * from {$this->targetTable} ORDER BY {$orderby}");
+
+		$result->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $this->className);
+
+		return $result;
+
 	}
 
 	public function delete($id) {

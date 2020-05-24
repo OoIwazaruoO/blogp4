@@ -3,23 +3,38 @@ namespace Controllers;
 
 use Core\MyController;
 use Entities\Comment;
-use Entities\User;
-use Managers\ArticlesManager;
-use Managers\CommentsManager;
 
 class CommentsController extends MyController {
 
 	public function __construct($actionData) {
+
 		parent::__construct($actionData);
 
-		$this->startSessionIfNotStarted();
-
-		$this->user = new User();
-		$this->articlesManager = new ArticlesManager($this->dao, "posts", 'Entities\\Article');
-
 		$this->comment = new Comment();
-		$this->commentsManager = new CommentsManager($this->dao, "comments", 'Entities\\Comment');
 
+	}
+
+	public function getListAction() {
+
+		if ($this->user->isAuthentifiedAdmin()):
+
+			if ($orderBy = $this->Data->get['orderby'] ?? 'id'):
+				$comments = $this->commentsManager->findAllOrderBy($this->Data->get['orderby'])->fetchAll();
+			endif;
+
+			if ($comments):
+
+				$responseArray = array();
+
+				foreach ($comments as $comment):
+					$postArray = ["entity" => "comment", "id" => $comment->id(), "author" => strip_tags($comment->author()), "content" => strip_tags($comment->content()), "creationDate" => $comment->getFormatedDate(), 'status' => $comment->status(), "articleId" => $comment->articleId(), "reported" => $comment->reported()];
+					$responseArray[] = (object) $postArray;
+				endforeach;
+
+				echo json_encode($responseArray);
+			endif;
+
+		endif;
 	}
 
 	public function addAction() {
@@ -61,12 +76,59 @@ class CommentsController extends MyController {
 
 			else:
 				$_SESSION['flash']['error'][] = "Cet article n'existe pas";
-				header(("Location: /articles"));
 			endif;
 
 		else:
 			$_SESSION['flash']['error'][] = "Vous devez être authentifié pour commenter un article";
-			header("Location: /articles");
+		endif;
+
+		header(("Location: /articles"));
+
+	}
+
+	public function editAction() {
+
+		if ($this->user->isAuthentifiedAdmin()):
+
+			if ($id = $this->Data->get['id'] ?? false):
+
+				$comment = $this->commentsManager->find($id)->fetch();
+
+				$postArray = ["entity" => "comment", "id" => $comment->id(), "content" => $comment->content(), "author" => $comment->author()];
+
+				echo json_encode((object) $postArray);
+
+			endif;
+
+		else:
+			echo false;
+		endif;
+
+	}
+
+	public function saveEditedAction() {
+
+		if ($this->user->isAuthentifiedAdmin()):
+
+			if (($commentId = $this->Data->post['commentId'] ?? false) && ($commentContent = $this->Data->post['commentContent'] ?? false)):
+				echo $this->commentsManager->adminEdit($commentContent, $commentId);
+			else:
+				echo "Des données sont manquantes";
+			endif;
+
+		else:
+			echo false;
+		endif;
+	}
+
+	public function deleteAction() {
+
+		if ($this->user->isAuthentifiedAdmin()):
+
+			if ($id = $this->Data->get['id']):
+				echo $this->commentsManager->setAsDeleted($id);
+			endif;
+
 		endif;
 
 	}

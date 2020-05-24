@@ -7,6 +7,7 @@ use Entities\Picture;
 class PicturesManager {
 
 	public function uploadPicture(Picture $picture) {
+
 		if (!$picture->hasErrors()) {
 
 			$pictureName = uniqid() . $picture->getExtension();

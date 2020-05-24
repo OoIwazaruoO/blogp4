@@ -17,7 +17,7 @@
 
       <?php if (!empty($_SESSION['flash']) && !empty($_SESSION['flash']['success'])): ?>
 
-          <div class="alert alert-success mt-3 w-50" role="alert" id="form-info">
+          <div class="alert alert-success mt-3 w-50" role="alert" id="success-info">
             <?php
 foreach ($_SESSION['flash']['success'] as $message):
 	echo $message . '<br/>';
@@ -30,7 +30,7 @@ $_SESSION['flash']['success'] = [];
 
        <?php if (!empty($_SESSION['flash']) && !empty($_SESSION['flash']['error'])): ?>
 
-          <div class="alert alert-danger mt-3 w-50" role="alert" id="form-info">
+          <div class="alert alert-danger mt-3 w-50" role="alert" id="error-info">
             <?php
 foreach ($_SESSION['flash']['error'] as $message):
 	echo $message . '<br/>';

@@ -15,7 +15,7 @@
 			<input type="password" class="form-control" id="password" name="password" placeholder="Saisir votre mot de passe" aria-describedby="pass1Help" required>
 			<small id="pass1Help" class="form-text text-muted">Entrez votre mot de passe</small>
 		</div>
-		<span>Pas encore inscrit? <a href="/users/inscriptionForm">s'inscrire</a></span>
+		<span>Pas encore inscrit? <a href="/registration">s'inscrire</a></span>
 
 		<div class="form-group text-center">
 

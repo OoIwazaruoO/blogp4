@@ -7,7 +7,7 @@ use Core\Manager;
 class ArticlesManager extends Manager {
 
 	public function __construct($dao, $table, $classname) {
-		parent::__construct($dao, $table, $classname);
+		parent::__construct($dao, $table, $classname, array("id", "creationDate", "updateDate", "type", "chapterNumber"));
 	}
 
 	public function save($title, $chapterNumber, $content, $type, $pictureName = null, $id = null) {
@@ -40,10 +40,10 @@ class ArticlesManager extends Manager {
 	private function update($title, $chapterNumber, $content, $type, $id, $pictureName = null) {
 
 		if ($pictureName != null):
-			$sql = "UPDATE {$this->targetTable} SET title = :title, content = :content, type = :type, chapterNumber = :chapterNumber, pictureName = :pictureName WHERE id = :id";
+			$sql = "UPDATE {$this->targetTable} SET title = :title, content = :content, type = :type, chapterNumber = :chapterNumber, pictureName = :pictureName, updateDate = NOW() WHERE id = :id";
 			$execData = array(":title" => $title, ":content" => $content, ":type" => $type, ":chapterNumber" => $chapterNumber, ":pictureName" => $pictureName, ":id" => $id);
 		else:
-			$sql = "UPDATE {$this->targetTable} SET title = :title, content = :content, type = :type, chapterNumber = :chapterNumber) VALUES(:title, :content, :type, :chapterNumber)";
+			$sql = "UPDATE {$this->targetTable} SET title = :title, content = :content, type = :type, chapterNumber = :chapterNumber, updateDate = NOW() WHERE id= :id";
 			$execData = array(":title" => $title, ":content" => $content, ":type" => $type, ":chapterNumber" => $chapterNumber, ":id" => $id);
 		endif;
 
@@ -51,24 +51,6 @@ class ArticlesManager extends Manager {
 		$updated = $req->execute($execData);
 
 		return $updated;
-
-	}
-
-	public function findAllOrderBy($orderby = "id") {
-
-		$possibleOrderBy = array("id", "creationDate", "updateDate", "type", "chapterNumber");
-
-		$index = array_search($orderby, $possibleOrderBy);
-
-		if (!$index):
-			$orderby = "id";
-		endif;
-
-		$result = $this->dao->query("SELECT * from {$this->targetTable} ORDER BY {$orderby}");
-
-		$result->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $this->className);
-
-		return $result;
 
 	}
 

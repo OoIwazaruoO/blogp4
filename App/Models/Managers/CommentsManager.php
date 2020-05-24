@@ -7,7 +7,7 @@ use Core\Manager;
 class CommentsManager extends Manager {
 
 	public function __construct($dao, $table, $classname) {
-		parent::__construct($dao, $table, $classname);
+		parent::__construct($dao, $table, $classname, array("id", "creationDate", "author", "status"));
 	}
 
 	public function add($articleId, $author, $content) {
@@ -82,24 +82,6 @@ class CommentsManager extends Manager {
 		$commentsNumber = $request->fetch()[0];
 
 		return $commentsNumber;
-	}
-
-	public function findAllOrderBy($orderby = "id") {
-
-		$possibleOrderBy = array("id", "creationDate", "author", "status");
-
-		$index = array_search($orderby, $possibleOrderBy);
-
-		if (!$index):
-			$orderby = "id";
-		endif;
-
-		$result = $this->dao->query("SELECT * from {$this->targetTable} ORDER BY {$orderby}");
-
-		$result->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $this->className);
-
-		return $result;
-
 	}
 
 }

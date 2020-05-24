@@ -2,14 +2,14 @@
 
 	<h1>Billet simple pour l'Alaska</h1>
 	<h2>Inscription</h2>
-	
-	<form action="/users/register" method="post" id="inscription-form">
-		
+
+	<form action="/registration/register" method="post" id="inscription-form">
+
 		<div class="form-group" >
 			<label for="login">Pseudo</label>
 			<input type="text" class="form-control" id="login" aria-describedby="pseudoHelp" placeholder="Saisir votre pseudo" name="login" minlength="3" maxlength="12" required>
 			<small id="pseudoHelp" class="form-text text-muted">3 à 12 caractères; Caractères alphanumériques uniquement.</small>
-		</div>		
+		</div>
 		<div class="form-group">
 			<label for="mail">Adresse email</label>
 			<input type="email" class="form-control" id="mail" aria-describedby="emailHelp" placeholder="Saisir votre Email" name="mail" required>
@@ -25,7 +25,7 @@
 			<input type="password" class="form-control" id="pass2" name="pass2" placeholder="Resaisir votre mot de passe" aria-describedby="pass2Help" minlength="8" required>
 			<small id="pass2Help" class="form-text text-muted">Resaisir le mot de passe.</small>
 		</div>
-		
+
 		<div class="alert alert-info" role="alert" id="form-info">
 
 		</div>

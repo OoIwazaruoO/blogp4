@@ -39,17 +39,17 @@
 					<?php while ($comment = $comments->fetch()): ?>
 
 						<div class="card">
-	  						<h5 class="card-header"><?=$comment->author()?></h5>
+	  						<h5 class="card-header"><?=strip_tags($comment->author())?></h5>
 	  						<div class="card-body">
 	    						<em><?=$comment->getFormatedDate()?></em>
 	    						<p class="card-text">
 
-	    							<?php if ($comment->status() == "Ok"): ?>
-	    						    <?=$comment->content()?>
+	    							<?php if ($comment->status() == "OK"): ?>
+	    						    <?=strip_tags($comment->content())?>
 	    						    <?php elseif ($comment->status() == "EDITED"): ?>
-	    						    <?=$comment->content() . " <em class=\"text-info\">Modifié par l'administrateur</em>"?>
+	    						    <?=strip_tags($comment->content()) . " <em class=\"text-info\">Modifié par l'administrateur</em>"?>
 	    							<?php else: ?>
-	    							<?="Commentaire supprimé"?>
+	    							<?="<span class=\"text-danger\">Commentaire supprimé</span>"?>
 	    							<?php endif;?>
 
 

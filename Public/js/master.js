@@ -77,7 +77,7 @@ class ListLoader {
 
         })
 
-        this.orderByEl.change(e=>{
+        this.orderByEl.change(e => {
 
             this.articlesListUpToDate = false;
             this.commentsListUpToDate = false;
@@ -95,7 +95,7 @@ class ListLoader {
 
         if (this.target) {
 
-            this.url = "/master/getList/target/" + this.target;
+            this.url = "/" + this.target + "/getList";
 
             if (this.orderBy) {
                 this.url += "/orderBy/" + this.orderBy;
@@ -141,7 +141,7 @@ class ListLoader {
                     let type = el.type == "published" ? "publié" : "brouillon";
                     let alertClass = el.type == "published" ? "success" : "warning";
 
-                    htmlStr += "<tr id=\"article" + el.id + "\" class=\"alert-" + alertClass + "\"> <th scope=\"row\">" + el.chapterId + "</th> <td>" + el.title + "</td> <td>" + el.excerpt + "</td> <td>" + el.update + "</td> <td>" + type + "</td> <td class=\"d-flex flex-column\"><a data-action=\"edit\" data-target=\"article\" data-id=" + el.id + " href=\"#\" class=\"text-success\">modifier</a><a data-action=\"delete\" data-target=\"article\" data-id=" + el.id + " href=\"#\" class=\"text-danger\">supprimer</a></td> </tr>";
+                    htmlStr += "<tr id=\"articles" + el.id + "\" class=\"alert-" + alertClass + "\"> <th scope=\"row\">" + el.chapterId + "</th> <td>" + el.title + "</td> <td>" + el.excerpt + "</td> <td>" + el.update + "</td> <td>" + type + "</td> <td class=\"d-flex flex-column\"><a data-action=\"edit\" data-target=\"articles\" data-id=" + el.id + " href=\"#\" class=\"text-success\">modifier</a><a data-action=\"delete\" data-target=\"articles\" data-id=" + el.id + " href=\"#\" class=\"text-danger\">supprimer</a></td> </tr>";
                 })
 
                 this.chaptersTBody.html(htmlStr);
@@ -151,10 +151,10 @@ class ListLoader {
             case "comments":
 
 
-                this.commentsList.forEach(el =>{
+                this.commentsList.forEach(el => {
                     let alertClass = el.reported == true ? "danger" : "success";
 
-                    htmlStr += "<tr id=\"comment" + el.id + "\" class=\"alert-" + alertClass + "\"> <th scope=\"row\">" + el.articleId + "</th> <td>" + el.author + "</td> <td>" + el.content + "</td> <td>" + el.creationDate + "</td> <td>" + el.status + "</td> <td class=\"d-flex flex-column\"><a data-action=\"edit\" data-target=\"comment\" data-id=" + el.id + " href=\"#\" class=\"text-success\">modifier</a><a data-action=\"delete\" data-target=\"comment\" data-id=" + el.id + " href=\"#\" class=\"text-danger\">supprimer</a></td> </tr>";
+                    htmlStr += "<tr id=\"comments" + el.id + "\" class=\"alert-" + alertClass + "\"> <th scope=\"row\">" + el.articleId + "</th> <td>" + el.author + "</td> <td>" + el.content + "</td> <td>" + el.creationDate + "</td> <td>" + el.status + "</td> <td class=\"d-flex flex-column\"><a data-action=\"edit\" data-target=\"comments\" data-id=" + el.id + " href=\"#\" class=\"text-success\">modifier</a><a data-action=\"delete\" data-target=\"comments\" data-id=" + el.id + " href=\"#\" class=\"text-danger\">supprimer</a></td> </tr>";
                 })
 
                 this.commentsTBody.html(htmlStr);
@@ -164,10 +164,10 @@ class ListLoader {
             case "users":
 
 
-                this.usersList.forEach(el =>{
-                    let alertClass = el.banned == true ? "danger" : el.confirmed == true ?"success" : "warning";
+                this.usersList.forEach(el => {
+                    let alertClass = el.banned == true ? "danger" : el.confirmed == true ? "success" : "warning";
 
-                    htmlStr += "<tr id=\"user" + el.id + "\" class=\"alert-" + alertClass + "\"> <th scope=\"row\">" + el.login + "</th> <td>" + el.inscriptionDate + "</td> <td>" + el.role + "</td> <td>" + el.confirmed + "</td> <td>" + el.banned + "</td> <td class=\"d-flex flex-column\"><a data-action=\"delete\" data-target=\"user\" data-id=" + el.id + " href=\"#\" class=\"text-danger\">Bannir</a></td> </tr>";
+                    htmlStr += "<tr id=\"users" + el.id + "\" class=\"alert-" + alertClass + "\"> <th scope=\"row\">" + el.login + "</th> <td>" + el.inscriptionDate + "</td> <td>" + el.role + "</td> <td>" + el.confirmed + "</td> <td>" + el.banned + "</td> <td class=\"d-flex flex-column\"><a data-action=\"delete\" data-target=\"users\" data-id=" + el.id + " href=\"#\" class=\"text-danger\">Bannir</a></td> </tr>";
                 })
 
                 this.usersTBody.html(htmlStr);
@@ -216,39 +216,45 @@ class ListLoader {
     }
 
     loadListSuccess(data) {
-    
-        let dataArray = JSON.parse(data);
-        
 
-        if (dataArray[0]) {
+        if (data) {
 
-            switch (dataArray[0].entity) {
+            let dataArray = JSON.parse(data);
 
-                case "article":
-                    this.articlesList = dataArray;
-                    this.articlesListUpToDate = true;
-                    this.displayList("articles");
-                    break;
 
-                case "comment":
-                    this.commentsList = dataArray;
-                    this.commentsListUpToDate = true;
-                    this.displayList('comments');
+            if (dataArray[0]) {
 
-                break;
-                case "user":
-                    this.usersList = dataArray;
-                    this.usersListUpToDate = true;
-                    this.displayList("users");
-                    break;
+                switch (dataArray[0].entity) {
 
-                default:
-                    console.log("nothing here");
-                    break;
+                    case "article":
+                        this.articlesList = dataArray;
+                        this.articlesListUpToDate = true;
+                        this.displayList("articles");
+                        break;
 
+                    case "comment":
+                        this.commentsList = dataArray;
+                        this.commentsListUpToDate = true;
+                        this.displayList('comments');
+
+                        break;
+                    case "user":
+                        this.usersList = dataArray;
+                        this.usersListUpToDate = true;
+                        this.displayList("users");
+                        break;
+
+                    default:
+                        console.log("nothing here");
+                        break;
+
+                }
             }
+        } else {
+            alert("Aucun " + this.target + " en base de données");
         }
     }
+
 }
 
 let listLoader = new ListLoader()
