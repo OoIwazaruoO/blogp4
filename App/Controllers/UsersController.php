@@ -95,15 +95,15 @@ class UsersController extends MyController {
 					endif;
 
 				else:
-					$_SESSION['flash']['error'][] = "bug 1 informations de connexion incorrectes";
+					$_SESSION['flash']['error'][] = "informations de connexion incorrectes";
 				endif;
 
 			else:
-				$_SESSION['flash']['error'][] = "bug2 informations de connexion incorrectes";
+				$_SESSION['flash']['error'][] = "informations de connexion incorrectes";
 			endif;
 
 		else:
-			$_SESSION['flash']['error'][] = "bug3 Veuillez renseignez les deux champs";
+			$_SESSION['flash']['error'][] = "Veuillez renseignez les deux champs";
 		endif;
 
 		header("Location: /users");
