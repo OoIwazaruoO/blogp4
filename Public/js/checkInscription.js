@@ -5,14 +5,14 @@ $('#submitInscription').click((e) => {
 
 	let mailReg = /^[^\W][a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\@[a-zA-Z0-9_]+(\.[a-zA-Z0-9_]+)*\.[a-zA-Z]{2,4}$/;
 
-	let pseudo = $('#pseudo').val();
+	let login = $('#login').val();
 	let mail = $('#mail').val();
 	let pass1 = $('#pass1').val();
 	let pass2 = $('#pass2').val();
 
-	if (pseudo.length < 3) {
+	if (login.length < 3) {
 		checkMessage = "Pseudo trop court : au moins 3 caractères";
-	} else if (pseudo.length > 12) {
+	} else if (login.length > 12) {
 		checkMessage = 'Pseudo trop long : 12 caractères max';
 	} else if (!mailReg.test(String(mail).toLowerCase())) {
 		checkMessage = 'Le mail est invalide';
