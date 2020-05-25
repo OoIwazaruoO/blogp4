@@ -22,7 +22,7 @@ class CommentsManager extends Manager {
 	}
 
 	public function setAsDeleted($id) {
-		$request = $this->dao->prepare("UPDATE {$this->targetTable} SET status = \"DELETED\" WHERE id = :id");
+		$request = $this->dao->prepare("UPDATE {$this->targetTable} SET status = \"DELETED\", reported = 0 WHERE id = :id");
 		$deleted = $request->execute(array(":id" => $id));
 
 		return $deleted;
@@ -37,7 +37,7 @@ class CommentsManager extends Manager {
 	}
 
 	public function adminEdit($content, $id) {
-		$request = $this->dao->prepare("UPDATE {$this->targetTable} SET content = :content, status = \"EDITED\" WHERE id = :id");
+		$request = $this->dao->prepare("UPDATE {$this->targetTable} SET content = :content, status = \"EDITED\", reported = 0 WHERE id = :id");
 		$edited = $request->execute(array(":content" => $content,
 			":id" => $id));
 

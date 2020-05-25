@@ -152,9 +152,12 @@ class ListLoader {
 
 
                 this.commentsList.forEach(el => {
-                    let alertClass = el.reported == true ? "danger" : "success";
+                    let alertClass = el.status == "DELETED" ? "danger" : el.reported == true ? "warning" : "success";
+                    let deleteLink = el.status != "DELETED" ? "<a data-action=\"delete\" data-target=\"comments\" data-id=" + el.id + " href=\"#\" class=\"text-danger\">supprimer</a>" : "";
+                    let editLink = el.status != "DELETED" ? "<a data-action=\"edit\" data-target=\"comments\" data-id=" + el.id + " href=\"#\" class=\"text-success\">modifier</a>" : "";
+                    let status = el.status == "DELETED" ? "Supprimé" : el.status == "EDITED" ? "Modifié" : "Ok"
 
-                    htmlStr += "<tr id=\"comments" + el.id + "\" class=\"alert-" + alertClass + "\"> <th scope=\"row\">" + el.articleId + "</th> <td>" + el.author + "</td> <td>" + el.content + "</td> <td>" + el.creationDate + "</td> <td>" + el.status + "</td> <td class=\"d-flex flex-column\"><a data-action=\"edit\" data-target=\"comments\" data-id=" + el.id + " href=\"#\" class=\"text-success\">modifier</a><a data-action=\"delete\" data-target=\"comments\" data-id=" + el.id + " href=\"#\" class=\"text-danger\">supprimer</a></td> </tr>";
+                    htmlStr += "<tr id=\"comments" + el.id + "\" class=\"alert-" + alertClass + "\"> <th scope=\"row\">" + el.articleId + "</th> <td>" + el.author + "</td> <td>" + el.content + "</td> <td>" + el.creationDate + "</td> <td>" + status + "</td> <td class=\"d-flex flex-column\">" + deleteLink + editLink +  "</td> </tr>";
                 })
 
                 this.commentsTBody.html(htmlStr);
@@ -224,6 +227,8 @@ class ListLoader {
         if (data) {
 
             let dataArray = JSON.parse(data);
+
+            console.log(dataArray);
 
             if (dataArray[0]) {
 
