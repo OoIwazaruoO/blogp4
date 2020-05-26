@@ -1,22 +1,36 @@
-class ListLoader {
+class MasterDao {
+
 
     constructor() {
 
-        this.target = "articles";
-        this.orderBy = "id";
+        this.articlesDao = new ArticlesDao();
+        this.commentsDao = new CommentsDao();
+        this.usersDao = new UsersDao();
 
-        this.articlesList;
-        this.commentsList;
-        this.usersList;
+        this.init();
+    }
 
-        this.articlesListUpToDate = false;
-        this.commentsListUpToDate = false;
-        this.usersListUpToDate = false;
+    init() {
 
+        this.tinyInit();
         this.getElements();
         this.addListeners();
+    }
 
+    tinyInit() {
 
+        tinymce.init({
+            selector: "textarea#content",
+            language: 'fr_FR',
+            language_url: '/Public/js/fr_FR.js',
+            width: "100%",
+            height: "550",
+            setup: function(editor) {
+                editor.on('change', function() {
+                    editor.save();
+                });
+            }
+        });
     }
 
     getElements() {
@@ -43,167 +57,116 @@ class ListLoader {
         this.commentsTBody = $("#commenttable tbody");
         this.usersTBody = $("#usertable tbody");
 
-
     }
 
-
     addListeners() {
+        this.previewInit();
+
+        $("#savepost").click(e => {
+            e.preventDefault();
+            this.articlesDao.save();
+        })
+
+        $("#newchapter").click(e => {
+            this.articlesDao.showForm();
+        })
+
+        $("body").click(e => {
+            this.confirmAction(e);
+        })
+
+        $("#editcomment").click(e => {
+            e.preventDefault();
+            this.commentsDao.save();
+        })
+
         $("#loadlist").click(e => {
 
             e.preventDefault();
-            this.loadList();
+            this.getList();
 
         })
-
 
         this.targetEl.change(e => {
 
-            switch (e.target.value) {
-
-                case "articles":
-                    this.enableOptGroups(this.articlesOptGr);
-                    break;
-                case "comments":
-                    this.enableOptGroups(this.commentsOptGr);
-                    break;
-                case "users":
-                    this.enableOptGroups(this.usersOptGr);
-                    break;
-                default:
-                    this.enableOptGroups(this.articlesOptGr);
-                    break;
-            }
-
-
+            let value = e.target.value;
+            value == "articles" ? this.enableOptGroups(this.articlesOptGr) : value == "comments" ? this.enableOptGroups(this.commentsOptGr) : this.enableOptGroups(this.usersOptGr);
+ 
         })
 
-        this.orderByEl.change(e => {
-
-            this.articlesListUpToDate = false;
-            this.commentsListUpToDate = false;
-            this.usersListUpToDate = false;
-        })
     }
 
-    loadList() {
+    previewInit() {
 
-        let keepLoad = false;
+        let previewPicture = function(fileInput) {
+
+            document.querySelector("#" + fileInput).addEventListener('change', function(e) {
+                let file = e.target.files[0],
+                    r = new FileReader();
+
+                if (!file) return alert("Echec du chargement du fichier");
+                r.onload = function(e) {
+                    document.querySelector('#picturePreview').setAttribute('src', e.target.result);
+
+                }
+                r.readAsDataURL(file);
+            });
+        };
+
+        previewPicture("pictureUpload");
+    }
+
+    getList() {
+
 
         this.target = this.targetEl.val();
         this.orderBy = this.orderByEl.val();
 
+        let dao = this.target == "users" ? this.usersDao : this.target == "comments" ? this.commentsDao : this.articlesDao;
 
-        if (this.target) {
+        dao.getList(this.orderBy);
 
-            this.url = "/" + this.target + "/getList";
-
-            if (this.orderBy) {
-                this.url += "/orderBy/" + this.orderBy;
-            }
-
-            if (this.target == "articles" && this.articlesListUpToDate == false) {
-                keepLoad = true;
-            }
-
-            if (this.target == "comments" && this.commentsListUpToDate == false) {
-                keepLoad = true;
-            }
-
-            if (this.target == "users" && this.usersListUpToDate == false) {
-                keepLoad = true;
-            }
-
-
-            if (keepLoad) {
-
-                $.ajax({
-                    type: "GET",
-                    url: this.url,
-                    success: this.loadListSuccess.bind(this)
-                });
-
-            } else {
-                this.displayList(this.target);
-            }
-        }
-    }
-
-    displayList(listToDisplay) {
-
-        let htmlStr = "";
-
-        switch (listToDisplay) {
-
-            case "articles":
-
-                this.articlesList.forEach(el => {
-
-                    let type = el.type == "published" ? "publié" : "brouillon";
-                    let alertClass = el.type == "published" ? "success" : "warning";
-
-                    htmlStr += "<tr id=\"articles" + el.id + "\" class=\"alert-" + alertClass + "\"> <th scope=\"row\">" + el.chapterId + "</th> <td>" + el.title + "</td> <td>" + el.excerpt + "</td> <td>" + el.update + "</td> <td>" + type + "</td> <td class=\"d-flex flex-column\"><a data-action=\"edit\" data-target=\"articles\" data-id=" + el.id + " href=\"#\" class=\"text-success\">modifier</a><a data-action=\"delete\" data-target=\"articles\" data-id=" + el.id + " href=\"#\" class=\"text-danger\">supprimer</a></td> </tr>";
-                })
-
-                this.chaptersTBody.html(htmlStr);
-                this.showTable(this.chapterTable);
-
-                break;
-            case "comments":
-
-
-                this.commentsList.forEach(el => {
-                    let alertClass = el.status == "DELETED" ? "danger" : el.reported == true ? "warning" : "success";
-                    let deleteLink = el.status != "DELETED" ? "<a data-action=\"delete\" data-target=\"comments\" data-id=" + el.id + " href=\"#\" class=\"text-danger\">supprimer</a>" : "";
-                    let editLink = el.status != "DELETED" ? "<a data-action=\"edit\" data-target=\"comments\" data-id=" + el.id + " href=\"#\" class=\"text-success\">modifier</a>" : "";
-                    let status = el.status == "DELETED" ? "Supprimé" : el.status == "EDITED" ? "Modifié" : "Ok"
-
-                    htmlStr += "<tr id=\"comments" + el.id + "\" class=\"alert-" + alertClass + "\"> <th scope=\"row\">" + el.articleId + "</th> <td>" + el.author + "</td> <td>" + el.content + "</td> <td>" + el.creationDate + "</td> <td>" + status + "</td> <td class=\"d-flex flex-column\">" + deleteLink + editLink +  "</td> </tr>";
-                })
-
-                this.commentsTBody.html(htmlStr);
-                this.showTable(this.commentTable);
-
-                break;
-            case "users":
-
-
-                this.usersList.forEach(el => {
-                    let alertClass = el.banned == true ? "danger" : el.confirmed == true ? "success" : "warning";
-                    let confirmed = el.confirmed == true ? "oui" : "non"
-                    let banned = el.banned == true ? "oui" : "non";
-                    let bannLink = el.banned == true ? "<a data-action=\"unbann\" data-target=\"users\" data-id=" + el.id + " href=\"#\" class=\"text-success\">Débannir</a>" : "<a data-action=\"bann\" data-target=\"users\" data-id=" + el.id + " href=\"#\" class=\"text-danger\">Bannir</a>";
-
-
-                    htmlStr += "<tr id=\"users" + el.id + "\" class=\"alert-" + alertClass + "\"> <th scope=\"row\">" + el.login + "</th> <td>" + el.inscriptionDate + "</td> <td>" + el.role + "</td> <td>" + confirmed + "</td> <td>" + banned + "</td> <td class=\"d-flex flex-column\">" + bannLink + "</td> </tr>";
-                })
-
-                this.usersTBody.html(htmlStr);
-                this.showTable(this.userTable);
-
-
-                break;
-            default:
-                this.displayList("articles");
-                break;
-
-        }
-
-
+        
 
     }
 
-    showTable(tableToShow) {
+    confirmAction(e) {
 
-        this.tables.forEach(el => {
-            if (el == tableToShow) {
+        let data = e.target.dataset;
 
-                el.removeClass("d-none");
-            } else {
+        if (data.action) {
+            e.preventDefault();
 
-                el.addClass("d-none");
+            if (data.target) {
+
+                if (data.id) {
+
+                    this.action = data.action;
+                    this.target = data.target;
+                    this.id = data.id;
+
+
+                    switch (this.target) {
+
+                        case "articles":
+                            this.action == "delete" ? this.articlesDao.delete(this.id) : this.action == "edit" ? this.articlesDao.edit(this.id) : null;
+                            break;
+                        case "comments":
+                            this.action == "delete" ? this.commentsDao.delete(this.id) : this.action == "edit" ? this.commentsDao.edit(this.id) : null;
+                            break;
+                        case "users":
+                            this.action == "bann" ? this.usersDao.bann(this.id) : this.action == "unbann" ? this.usersDao.unbann(this.id) : null;
+                            break;
+                        default:
+                            break;
+
+                    }
+
+                }
+
             }
-        })
 
+        }
     }
 
     enableOptGroups(optGrToEnable) {
@@ -221,48 +184,6 @@ class ListLoader {
         })
 
     }
-
-    loadListSuccess(data) {
-
-        if (data) {
-
-            let dataArray = JSON.parse(data);
-
-            console.log(dataArray);
-
-            if (dataArray[0]) {
-
-                switch (dataArray[0].entity) {
-
-                    case "article":
-                        this.articlesList = dataArray;
-                        this.articlesListUpToDate = true;
-                        this.displayList("articles");
-                        break;
-
-                    case "comment":
-                        this.commentsList = dataArray;
-                        this.commentsListUpToDate = true;
-                        this.displayList('comments');
-
-                        break;
-                    case "user":
-                        this.usersList = dataArray;
-                        this.usersListUpToDate = true;
-                        this.displayList("users");
-                        break;
-
-                    default:
-                        console.log("nothing here");
-                        break;
-
-                }
-            }
-        } else {
-            alert("Aucun " + this.target + " en base de données");
-        }
-    }
-
 }
 
-let listLoader = new ListLoader()
+let master = new MasterDao();

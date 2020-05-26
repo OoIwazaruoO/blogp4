@@ -21,7 +21,7 @@
 					<option value="id" selected>Identifiants</option>
 					<optgroup label="chapitres" id="optArticles" >
 						<option value="title">Titres</option>
-						<option value="">N° de chapitre</option>
+						<option value="chapterNumber">N° de chapitre</option>
 						<option value="creationDate">Date de création</option>
 						<option value="updateDate">Date de mise à jour</option>
 						<option value="type">Types</option>
@@ -50,6 +50,8 @@
 	<div id="flashformsuccess" class="mt-5">
 
 	</div>
+
+
 
 	<form class="mt-5 border text-left p-5 d-none" enctype="multipart/form-data" method="post" action="/master/saveArticle" id="articleform">
 		<div class="form-group">
@@ -97,6 +99,12 @@
 		</div>
 	</form>
 	<div id="flashcomment"></div>
+
+	<div>
+		<button id="showListArticles" class="btn btn-info d-none">Liste des articles</button>
+		<button id="showListComments" class="btn btn-info d-none">Liste des commentaires</button>
+		<button id="showListUsers" class="btn btn-info d-none">Liste des utilisateurs</button>
+	</div>
 
 
 

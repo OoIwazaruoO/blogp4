@@ -14,7 +14,7 @@ class MasterController extends MyController {
 	public function indexAction() {
 
 		if ($this->user->isAuthentifiedAdmin()):
-			$this->view->render('master', [], array('master', 'masterAddEditDelete'));
+			$this->view->render('master', [], array('ArticlesCommentsUsers', 'master'));
 		else:
 			throw new \Exception("Cette page n'existe pas");
 		endif;
